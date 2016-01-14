@@ -344,10 +344,10 @@ namespace {
                     Space[i][j] = KEmpty;
                 //Bug fixed : rendu du missile spécial bugué
                 //Si la case du dessous (si existante) n'est pas un missile spécial alors bug alors efface
-                if ((Space[i][j] == KBossSpecialWeapon) && i <= Space.size() && Space[i+1][j] != KBossSpecialWeapon)
+                else if ((Space[i][j] == KBossSpecialWeapon) && i < Space.size() && Space[i+1][j] != KBossSpecialWeapon && Space[i+1][j] != KInsideMe)
                     Space[i][j] = KEmpty;
                 ////Disparition du missile à la case donnée (joueur)
-                if(Space[i][j] == KTorpedo && i == 0)
+                else if(Space[i][j] == KTorpedo && i == 0)
                     Space[i][j] = KEmpty;
 
             }
@@ -384,7 +384,7 @@ namespace {
     void Shoot2(CVString & Space,unsigned Line, unsigned Column)
     {
 
-        for(unsigned i(Line); i < Space.size()-2; ++i)
+        for(unsigned i(Line); i < Space.size(); ++i)
             //Résolution du bug de disparition du boss lorsque attaque spécial au dessus de lui
             if (Space[i][Column] != KInsideBoss)
                 Space[i][Column] = KBossSpecialWeapon;
