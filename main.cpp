@@ -7,7 +7,7 @@
 #include <chrono> //AVEC CTIME, pour un chrono pour le rechargement des bullets
 #include <ctime>
 
-#define DEBUG
+//#define DEBUG
 
 
 
