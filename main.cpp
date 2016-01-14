@@ -80,11 +80,6 @@ namespace {
 
     const unsigned KRatioMeInvaders = 4;    // Nombre de fois où c'est le tour du joueur pour un tour de l'envahisseur
 
-    void Fonction()
-    {
-
-    }
-
     string Couleur (const string & coul)
     {
 #ifdef DEBUG
