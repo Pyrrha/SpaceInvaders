@@ -80,6 +80,8 @@ namespace {
 
     const unsigned KRatioMeInvaders = 4;    // Nombre de fois où c'est le tour du joueur pour un tour de l'envahisseur
 
+
+    //Fonction qui renvoie une string qui est égale à la couleur assosié
     string Couleur (const string & coul)
     {
 #ifdef DEBUG
@@ -89,6 +91,7 @@ namespace {
 #endif
     }
 
+    //Je dois expliquer ?
     void ClearScreen ()
     {
 #ifdef DEBUG
@@ -101,6 +104,7 @@ namespace {
 #endif
     }
 
+    //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                        unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot)
     {
@@ -114,6 +118,8 @@ namespace {
         cout << "Beg : " << Beg << "   End : " << End << "    Shot : " << End+(Beg-End)/2 << "   Temps : " << TimeElapsed << endl;
         cout << "Konami : " << IsKonami << endl;
 #endif // define
+
+        //On adapte la couleur de la bordure (soit avec le KonamiCode activé soit en fonction de la vie)
         if (IsKonami)
         {
             ColBord = KonamiColor[rand()%5];
@@ -124,13 +130,15 @@ namespace {
             else if(NbLives > 1) ColBord = KYellow;
             else ColBord = KRed;
         }
+
+        //On affiche les points de vie restant
         cout << Couleur(KReset) << "Vie : ";
         for(unsigned i(0); i < KMyLives; ++i)
         {
             if(NbLives > i) cout << Couleur(KRed) << " ♥";
             else cout << Couleur(KBlack) << " ♥";
         }
-
+        //On affiche les munitions actuel
         cout << "   " << Couleur(KReset) << "Munitions : ";
         for(unsigned i(0); i < KMyBullet; ++i)
         {
@@ -140,12 +148,14 @@ namespace {
 
 
 
-
+        //On place le haut  de la grille
         cout << Couleur(ColBord) << endl;
         cout << setw(2) << "╔";
         for(unsigned i(1); i < (Space.size()*2)+1/*(Size*2)+1*/; ++i)
             cout << setw(2) << "═";
         cout << setw(2) << "╗" << endl;
+
+        //Et on affiche la grille (En fonction de si le Konami code est activé ou pas) (en placant les colonnes de gauche et de droite)
         for(unsigned i(0); i < Space.size(); ++i)
         {
             cout << setw(2)<< Couleur(ColBord) << "║";
@@ -187,6 +197,7 @@ namespace {
             cout << Couleur(ColBord)<< setw(2) << "║";
             cout << endl;
         }
+        //Puis on affiche le bas du cadre
         cout << setw(2) << Couleur(ColBord) << "╚";
         for(unsigned i(1); i < (Space.size()*2)+1/*(Size*2)+1*/; ++i)
             cout << setw(2) << "═";
@@ -194,6 +205,8 @@ namespace {
 
 
     }
+
+    //Fonction pour initié la grille en mode "Boss"
     void InitBossSpace(CVString & Space, unsigned Size)
     {
 
@@ -214,6 +227,8 @@ namespace {
 
 
     }
+
+    //Fonction pour inité la grille en mode standard
     void InitSpace (CVString & Space, unsigned Size)
     {
 
@@ -230,6 +245,7 @@ namespace {
     void Remove (CVString & Space, unsigned Line, unsigned Column);
     bool WhoExist(CVString Space, unsigned Line, char Who);
 
+    //Fonction pour descendre les ennemie quand ils arrivent en bout de ligne
     void DownShift(CVString & Space, unsigned CurrentLine, bool & Lost, bool & Win)
     {
         if (CurrentLine < Space.size() - 2)
@@ -253,16 +269,7 @@ namespace {
 
     }
 
-
-    // Pas du tout compris l'utilité de la fonction pour le moment x)
-    inline
-    bool IsDead (const CVString & Space, unsigned Line, unsigned Column, char Who)
-    {
-
-        return (Space[Line][Column] == KInsideMe && Space[Line][Column] != Who) || ((Space[Line][Column] == KInsideInvader || Space[Line][Column] == KInsideBoss ) && Space[Line][Column] != Who) ? true:false;
-
-    }
-
+    //Fonction du tire "Normal" des énnemies
     void Shoot (CVString & Space, unsigned Line, unsigned Middle, char Projectile, char Who)
     {
 
@@ -273,7 +280,7 @@ namespace {
     }
 
 
-
+    //Fonction qui vérifie l'existance de Who sur la ligne
     bool WhoExist(CVString Space, unsigned Line, char Who)
     {
         bool Exist = false;
@@ -286,7 +293,7 @@ namespace {
         return Exist;
     }
 
-
+    //Fonction qui supprime la case et les cases latérales
     void Remove (CVString & Space, unsigned Line, unsigned Column)
     {
         Space[Line][Column] = KEmpty;
@@ -296,6 +303,7 @@ namespace {
 
     }
 
+    //Fonction qui detect le debut et la fin des ennemies
     void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned & Beg, unsigned & End)
     {
         bool FirstFind = false;
@@ -314,10 +322,11 @@ namespace {
         }
     }
 
+    //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
     void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives)
     {
 
-        //Oui
+        //On parcous de haut en bas pour faire remonté les missile allié
         for(unsigned i (0); i < Space.size(); ++i)
             for(unsigned j(0); j < Space[i].size(); ++j)
             {
@@ -352,7 +361,7 @@ namespace {
 
             }
 
-        //Traitement des tirs et de leurs déplacement, de leur impact sur le jeu
+        //Et ici on parcous de bas en haut pour descendre les missile ennemie
         for(unsigned i (Space.size()); --i > 0;)
             for(unsigned j(0); j < Space[i].size(); ++j)
             {
@@ -381,6 +390,8 @@ namespace {
 
             }
     }
+
+    //Version 2 du tire, le tire spécial du boss
     void Shoot2(CVString & Space,unsigned Line, unsigned Column)
     {
 
@@ -391,15 +402,18 @@ namespace {
 
 
     }
+
+    //L'"IA" du boss
     void ManageBoss (int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot)
     {
-
+    //Si on est en bout de ligne on descent et on va dans l'autre sens !
         if((Space[CurrentLine][Space.size()-1] == KInsideBoss && Increment == 1) || (Space[CurrentLine][0] == KInsideBoss && Increment == -1))
         {
             DownShift(Space, CurrentLine, Lost, Win);
             ++CurrentLine;
             Increment = Increment * (-1);
         }
+        //Sinon on continue le chemin sur la ligne
         else
         {
             if (Increment == 1)
@@ -413,13 +427,14 @@ namespace {
             Beg += Increment;
             End += Increment;
         }
-
+        //Quoi qu'il arrive on tire, pûis on a 1 chance sur 3 pour tiré une deuxieme munition
         if(rand()%3 == 1) Shoot(Space, CurrentLine+1, End+rand()%(Beg-End), KBossWeapon, KInsideBoss);
         Shoot(Space, CurrentLine+2, End+rand()%(Beg-End), KBossWeapon, KInsideBoss);
 
-        //La croix bleue !!
+        //L'attaque spéciale, si elle a n'a pas été activé
         if(!BossShoot)
         {
+            //On lance un dé ! 1 chance sur 7 pour que le tire s'active
             if(rand()%7 == 1)
             {
                 BossShoot = true;
@@ -428,12 +443,14 @@ namespace {
                 IncomingBossAttack = true;
             }
         }
+        //Sinon si le compteur descent à 0 (compteur avant l'attaque) on tire !!!
         else if(CptShoot == 0)
         {
             Shoot2(Space, PosShoot.second, PosShoot.first);
             CptShoot = KBossShoot;
             BossShoot = false;
         }
+        //Sinon bah on descent le compteur :)
         else
         {
             IncomingBossAttack = false;
@@ -443,6 +460,7 @@ namespace {
 
     }
 
+    //Fonction qui gére les invader "normaux", cf ManageBoss sans la spécial attaque
     void ManageInvader (int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & ToShoot, bool & Win, bool & Lost, CVString & Space, unsigned & End)
     {
 
@@ -485,6 +503,7 @@ namespace {
 
     }
 
+    //Fonction Konami qui test si le konami code a été rentré !
     void Konami(vector <char> & Konami, char c, bool & IsKonami)
     {
         if(c != '\0')
@@ -496,6 +515,7 @@ namespace {
         if(Konami == KonamiCode) IsKonami = true;
     }
 
+    //Fonction qui gére le joueur
     void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char> & KonamiTab, bool & IsKonami)
     {
         // Lit la structure "termios" de l'entrée standard
@@ -518,6 +538,7 @@ namespace {
         char c;
         bool Action = false;
         bool Quit = false;
+
         while(!Action)
         {
 
@@ -570,6 +591,8 @@ namespace {
     }
     void Menu ();
     void SpaceInvaders ();
+
+    //Menuaprès avoir fini !
     void DisplayScore(const bool & Win, const bool & Lost)
     {
         unsigned ChoixMenu;
@@ -601,6 +624,8 @@ namespace {
         }
 
     }
+
+    //Menu général
     void Menu ()
     {
         unsigned ChoixMenu;
@@ -722,6 +747,8 @@ namespace {
     }
     void SpaceInvaders ()
     {
+
+        //Les valeurs général initialisé
         CVString Space;
         unsigned Size = 19;
         InitSpace(Space, Size);
@@ -819,7 +846,6 @@ int main ()
     Menu ();
 
     return 0;
-    cout << "LOL";
 }
 
 #ifdef DEBUG
