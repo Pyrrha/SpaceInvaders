@@ -819,6 +819,7 @@ int main ()
     Menu ();
 
     return 0;
+    cout << "LOL";
 }
 
 #ifdef DEBUG
