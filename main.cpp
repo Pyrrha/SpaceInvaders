@@ -351,11 +351,11 @@ namespace {
                 //Disparition du missile à la case donnée (envahisseur)
                 if((Space[i][j] == KMissile || Space[i][j] == KBossWeapon || Space[i][j] == KBossSpecialWeapon) && i == Space.size()-1)
                     Space[i][j] = KEmpty;
-                //Bug fixed : rendu du missile spécial bugué
-                //Si la case du dessous (si existante) n'est pas un missile spécial alors bug alors efface
+                    //Bug fixed : rendu du missile spécial bugué
+                    //Si la case du dessous (si existante) n'est pas un missile spécial alors bug alors efface
                 else if ((Space[i][j] == KBossSpecialWeapon) && i < Space.size() && Space[i+1][j] != KBossSpecialWeapon && Space[i+1][j] != KInsideMe)
                     Space[i][j] = KEmpty;
-                ////Disparition du missile à la case donnée (joueur)
+                    ////Disparition du missile à la case donnée (joueur)
                 else if(Space[i][j] == KTorpedo && i == 0)
                     Space[i][j] = KEmpty;
 
@@ -406,14 +406,14 @@ namespace {
     //L'"IA" du boss
     void ManageBoss (int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot)
     {
-    //Si on est en bout de ligne on descent et on va dans l'autre sens !
+        //Si on est en bout de ligne on descent et on va dans l'autre sens !
         if((Space[CurrentLine][Space.size()-1] == KInsideBoss && Increment == 1) || (Space[CurrentLine][0] == KInsideBoss && Increment == -1))
         {
             DownShift(Space, CurrentLine, Lost, Win);
             ++CurrentLine;
             Increment = Increment * (-1);
         }
-        //Sinon on continue le chemin sur la ligne
+            //Sinon on continue le chemin sur la ligne
         else
         {
             if (Increment == 1)
@@ -443,14 +443,14 @@ namespace {
                 IncomingBossAttack = true;
             }
         }
-        //Sinon si le compteur descent à 0 (compteur avant l'attaque) on tire !!!
+            //Sinon si le compteur descent à 0 (compteur avant l'attaque) on tire !!!
         else if(CptShoot == 0)
         {
             Shoot2(Space, PosShoot.second, PosShoot.first);
             CptShoot = KBossShoot;
             BossShoot = false;
         }
-        //Sinon bah on descent le compteur :)
+            //Sinon bah on descent le compteur :)
         else
         {
             IncomingBossAttack = false;
@@ -539,42 +539,42 @@ namespace {
         bool Action = false;
         bool Quit = false;
 
-            read(STDIN_FILENO, &c, 1); // Lit un caractére sur l'entrée standard
+        read(STDIN_FILENO, &c, 1); // Lit un caractére sur l'entrée standard
 
-            //ToLower(c);
-           if(c == KShoot) {
-               if (Bullet > 0) {
-                   Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
-                   --Bullet;
-               }
-               Action = true;
+        //ToLower(c);
+        if(c == KShoot) {
+            if (Bullet > 0) {
+                Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
+                --Bullet;
+            }
+            Action = true;
 
-           }
-            else if (c == KLeft) {
-               if (Pos > 0) {
-                   swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos - 1]);
-                   Pos -= 1;
-               }
-               Action = true;
+        }
+        else if (c == KLeft) {
+            if (Pos > 0) {
+                swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos - 1]);
+                Pos -= 1;
+            }
+            Action = true;
 
-           }
-            else if (c == KRight) {
-               if (Pos < Space.size() - 1) {
-                   swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos + 1]);
-                   Pos += 1;
-               }
-               Action = true;
+        }
+        else if (c == KRight) {
+            if (Pos < Space.size() - 1) {
+                swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos + 1]);
+                Pos += 1;
+            }
+            Action = true;
 
-           }
-           /*     case 27:
-                    Quit = true;
-                    Action = true;
-                    break;
+        }
+        /*     case 27:
+                 Quit = true;
+                 Action = true;
+                 break;
 
-                default:
-                    Action = true;
-                    break;
-            }*/
+             default:
+                 Action = true;
+                 break;
+         }*/
 
         tios.c_lflag = old_c_lflag;
         tcsetattr(STDIN_FILENO, TCSANOW, &tios);
@@ -625,12 +625,12 @@ namespace {
         /*if(!keybindread)
         {*/
 
-            keybindread.close();
-            ofstream keybindwrite("bind.key", ios::out | ios::trunc);
-            KRight = 'd';  // déplacement vers la droite
-            KLeft = 'q';  // Déplacement vers la gauche
-            KShoot = 'z'; // tirer
-            keybindwrite << KRight << KLeft << KShoot;
+        keybindread.close();
+        ofstream keybindwrite("bind.key", ios::out | ios::trunc);
+        KRight = 'd';  // déplacement vers la droite
+        KLeft = 'q';  // Déplacement vers la gauche
+        KShoot = 'z'; // tirer
+        keybindwrite << KRight << KLeft << KShoot;
         //}
 
         //FONCTION WORK IN PROGRESS -- By Diogo
