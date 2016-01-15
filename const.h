@@ -74,7 +74,7 @@ const unsigned KReloadBullet	= 15; //temps de rechargement
 
 // Constantes liées à l'eapace (l'écran)
 
-const unsigned KSizeLine   = 20;   // Nombre de caractères par ligne
+const unsigned KSizeLine   = 40;   // Nombre de caractères par ligne
 const unsigned KSizeSpace  = 12;   // Nombre de lignes de l'écran (de l'espace)
 
 const unsigned KBegInvader = 0;    // Numéro de colonne où commence l'envahisseur
