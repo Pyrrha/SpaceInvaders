@@ -417,6 +417,9 @@ namespace {
 
 
         //Manage Generique !!!
+        /*!
+         * \brief Manager de tout Invader | 1 : Invader | 2 : Boss | 3 : Ultra-boss
+         */
         void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot)
         {
         //Si on est en bout de ligne on descent et on va dans l'autre sens !
@@ -439,6 +442,7 @@ namespace {
             else if (Who == 3)
             {
 
+                //Work in progress
 
 
             }
