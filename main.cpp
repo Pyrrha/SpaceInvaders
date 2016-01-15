@@ -16,7 +16,6 @@ using namespace std;
 
 namespace {
 
-
     // Constantes couleurs
 
     const string KReset   ("0");
