@@ -37,7 +37,8 @@
 
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
-                       unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot, const unsigned & BossLife,const unsigned & UltraBossLife)
+                       unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
+                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level)
     {
 
         //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
@@ -61,7 +62,7 @@
             else if(NbLives > 1) ColBord = KYellow;
             else ColBord = KRed;
         }
-
+        cout << "NIVEAU " << Level << endl;
         //On affiche les points de vie restant
         cout << Couleur(KReset) << "Vie : ";
         for(unsigned i(0); i < KMyLives; ++i)
@@ -76,6 +77,7 @@
             if(Bullet > i) cout << Couleur(KGreen) << " |";
             else cout << Couleur(KRed) << " |";
         }
+        cout << endl;
         if (BossLife > 0)
         {
             cout << "   " << Couleur(KReset) << "Vie Boss : ";
@@ -84,6 +86,7 @@
                 if(BossLife > i) cout << Couleur(KYellow) << " ♥";
                 else cout << Couleur(KBlack) << " ♥";
             }
+            cout << endl;
 
         }
         if (UltraBossLife > 0)
@@ -94,7 +97,7 @@
                 if(UltraBossLife > i) cout << Couleur(KMAgenta) << " ♥";
                 else cout << Couleur(KBlack) << " ♥";
             }
-
+            cout << endl;
         }
 
 
@@ -207,7 +210,10 @@
 
         Space.resize(Size);
         for(unsigned i(0); i < Space.size(); ++i)
+        {
+            Space[i].resize(0);
             Space[i].resize(Size);
+        }
         for(unsigned i(0); i < KInvadersSize; ++i)
             Space[0][i] = KInsideInvader;
         for(unsigned i(0); i < KMySize; ++i)
@@ -411,7 +417,7 @@
         //Manage Generique !!!
         void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,
                              bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot,
-                             pair <unsigned, unsigned> & PosUltraShoot, unsigned HowMany)
+                             pair <unsigned, unsigned> & PosUltraShoot, unsigned HowMany, const unsigned & Level)
         {
         //Si on est en bout de ligne on descent et on va dans l'autre sens !
             char Invader;
@@ -787,7 +793,7 @@
 
         //Les valeurs général initialisé
         CVString Space;
-        unsigned Size = 9;
+        unsigned Size = 21;
         InitSpace(Space, Size);
         int Increment = 1;
         unsigned CurrentLine = 0;
@@ -823,9 +829,100 @@
         vector <char> Konami;
         Konami.resize(10);
 
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
+
+        unsigned Level = 1;
+        unsigned Ratio;
+        unsigned Who;
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
         start = std::chrono::system_clock::now();
-        while(!Win && !Lost)
+
+
+        while(Level != 50)
+        {
+            //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
+            Bullet = KMyBullet;
+            if(Level%5 == 0)
+            {
+                InitBossSpace(Space, Size);
+                Increment = 1;
+                CurrentLine = 0;
+                HowMany = 0;
+                Beg = KBossSize;
+                End = 0;
+                Pos = ((Space.size()-1)/2);
+                Win = false;
+                Lost = false;
+                ToShoot = false;
+                BossLife = KBossLife;
+                Ratio = KRatioMeBoss;
+                Who = 2;
+
+            }
+            else if(Level%16 == 0)
+            {
+                InitUltraBossSpace(Space, Size);
+                Increment = 1;
+                CurrentLine = 0;
+                HowMany = 0;
+                Beg = KUltraBossSize;
+                End = 0;
+                Pos = ((Space.size()-1)/2);
+                Win = false;
+                Lost = false;
+                ToShoot = false;
+                PosUltraShoot.first = 0;
+                PosUltraShoot.second = Space.size()-1;
+                HowMany = 0;
+                UltraBossLife = KUltraBossLife;
+                Ratio = KRatioMeUltraBoss;
+                Who = 3;
+            }
+            else
+            {
+                InitSpace(Space, Size);
+                Increment = 1;
+                CurrentLine = 0;
+                HowMany = 0;
+                Beg = KInvadersSize;
+                End = 0;
+                Pos = ((Space.size()-1)/2);
+                Win = false;
+                Lost = false;
+                ToShoot = false;
+                Ratio = KRatioMeInvaders;
+                Who = 1;
+
+            }
+
+            while(!Win && !Lost)
+            {
+                TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
+                        (end-start).count();
+                //if(TimeElapsed%KReloadBullet == 0)
+                //{
+                    if(Bullet < KMyBullet)
+                        ++Bullet;
+                //}
+                ManageMe(Space, Pos, Bullet, Konami, IsKonami);
+                ++HowMany;
+                if(HowMany%Ratio == 0)
+                    ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
+                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
+                DetectBegEnd(Space, CurrentLine, Beg, End);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
+                end = std::chrono::system_clock::now();
+            }
+            if(Lost)
+                DisplayScore(Win, Lost);
+            ++Level;
+
+
+        }
+        Win = true;
+        ClearScreen();
+        cout << Couleur(KReset);
+        DisplayScore(Win, Lost);
+        /*while(!Win && !Lost)
         {
             TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
                     (end-start).count();
@@ -883,9 +980,9 @@
 
         if(Lost)
             DisplayScore(Win, Lost);
-
+*/
         //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
-        Bullet = KMyBullet;
+        /*Bullet = KMyBullet;
 
         InitUltraBossSpace(Space, Size);
         Increment = 1;
@@ -919,12 +1016,12 @@
             DetectBegEnd(Space, CurrentLine, Beg, End);
             DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
             end = std::chrono::system_clock::now();
-        }
+        }*/
 
-        ClearScreen();
-        DisplayScore(Win, Lost);
+        //ClearScreen();
+        //DisplayScore(Win, Lost);
 
-        Couleur(KReset);
+        //Couleur(KReset);
     }
 
 
