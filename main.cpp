@@ -1,19 +1,3 @@
-/*!
- * \file main.cpp
- *
- * \author Tristan,
- *         Diego,
- *         Romain,
- *         Alexandre
- *
- * \date 15/01/2016
- *
- * \version 3.2.1
- *
- * \brief Space Invader
- *
- */
-
 #include <termios.h> //FLAG
 #include <iostream>
 #include <vector>
@@ -31,6 +15,7 @@
 using namespace std;
 
 namespace {
+
 
     // Constantes couleurs
 
@@ -55,14 +40,14 @@ namespace {
     const string KInvadersColor (KYellow);  // Couleur de l'envahisseur
     const char KInsideInvader       = 'W';  // caractèrere formant l'envahisseur
     const char KMissile             = 'T';  // missile
-    const unsigned KInvadersSize    =  5;   // nombre de caractères qui forment l'envahisseur
+    const unsigned KInvadersSize    =  3;   // nombre de caractères qui forment l'envahisseur
     const unsigned KInvadersMiddle  = KInvadersSize / 2;
     const string KInvadersForm (KInvadersSize, KInsideInvader);  // forme de l'envahisseur
 
     //Constantes liées au boss
     const char KInsideBoss          = 'M';  // caractèrere formant le boss
     const char KBossWeapon          = 'I';  // missile
-    const char KBossSpecialWeapon   = 'V';  // Missiles de l'attaque spéciale croix-bleue
+    const char KBossSpecialWeapon   = '|';  // Missiles de l'attaque spéciale croix-bleue
     const unsigned KBossShoot       = 2;
     const unsigned KBossSize        = 3;
     const unsigned KRatioMeBoss     = 2;
@@ -70,17 +55,28 @@ namespace {
     const string KBossSpecialColor  = KCyan;
 
 
+    //Constantes liées à l'ULTRA boss
+    const char KInsideUltraBoss     = 'H';  // caractèrere formant le boss
+    const char KUltraBossWeapon          = 'o';  // missile
+    const char KUltraBossSpecialWeapon   = '|';  // Missiles de l'attaque spéciale croix-bleue
+    const unsigned KUltraBossShoot       = 2;
+    const unsigned KUltraBossSize        = 1;
+    const unsigned KRatioMeUltraBoss     = 1;
+    const string KUltraBossColor         = KMAgenta;
+    const string KUltraBossSpecialColor  = KYellow;
+
+
     // Constantes liées au joueur
 
     const string KMyColor (KGreen);
     const char KInsideMe            = 'A';
-    const char KTorpedo             = '|';
+    const char KTorpedo             = '^';
     const unsigned KMySize          = 1;
     const unsigned KMyMiddle        = KMySize / 2;
     const string KMyForm (KMySize, KInsideMe);
     const unsigned KMyLives			= 4; // Vie du joueur
     const unsigned KMyBullet        = 3; //Nombre de munition
-    const unsigned KReloadBullet	= 7; //temps de rechargement
+    const unsigned KReloadBullet	= 15; //temps de rechargement
 
     // Constantes liées à l'eapace (l'écran)
 
@@ -275,8 +271,6 @@ namespace {
                  else
                      Remove(Space, CurrentLine, j);
                      //if (!WhoExist(Space, CurrentLine +1, KInsideInvader)) Win = true;
-
-
              }*/
         }
         else
@@ -367,11 +361,11 @@ namespace {
                 //Disparition du missile à la case donnée (envahisseur)
                 if((Space[i][j] == KMissile || Space[i][j] == KBossWeapon || Space[i][j] == KBossSpecialWeapon) && i == Space.size()-1)
                     Space[i][j] = KEmpty;
-                    //Bug fixed : rendu du missile spécial bugué
-                    //Si la case du dessous (si existante) n'est pas un missile spécial alors bug alors efface
+                //Bug fixed : rendu du missile spécial bugué
+                //Si la case du dessous (si existante) n'est pas un missile spécial alors bug alors efface
                 else if ((Space[i][j] == KBossSpecialWeapon) && i < Space.size() && Space[i+1][j] != KBossSpecialWeapon && Space[i+1][j] != KInsideMe)
                     Space[i][j] = KEmpty;
-                    ////Disparition du missile à la case donnée (joueur)
+                ////Disparition du missile à la case donnée (joueur)
                 else if(Space[i][j] == KTorpedo && i == 0)
                     Space[i][j] = KEmpty;
 
@@ -419,105 +413,88 @@ namespace {
 
     }
 
-    //L'"IA" du boss
-    void ManageBoss (int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot)
-    {
+
+
+
+        //Manage Generique !!!
+        void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot)
+        {
         //Si on est en bout de ligne on descent et on va dans l'autre sens !
-        if((Space[CurrentLine][Space.size()-1] == KInsideBoss && Increment == 1) || (Space[CurrentLine][0] == KInsideBoss && Increment == -1))
-        {
-            DownShift(Space, CurrentLine, Lost, Win);
-            ++CurrentLine;
-            Increment = Increment * (-1);
-        }
-            //Sinon on continue le chemin sur la ligne
-        else
-        {
-            if (Increment == 1)
-                for(unsigned j (Beg+1); --j > 0;)
-                {
-                    swap(Space[CurrentLine][j], Space[CurrentLine][j-1]);
-                }
-            else
-                for(unsigned j (End-1); j < Space.size() -1; ++j)
-                    swap(Space[CurrentLine][j], Space[CurrentLine][j+1]);
-            Beg += Increment;
-            End += Increment;
-        }
-        //Quoi qu'il arrive on tire, pûis on a 1 chance sur 3 pour tiré une deuxieme munition
-        if(rand()%3 == 1) Shoot(Space, CurrentLine+1, End+rand()%(Beg-End), KBossWeapon, KInsideBoss);
-        Shoot(Space, CurrentLine+2, End+rand()%(Beg-End), KBossWeapon, KInsideBoss);
+            char Invader;
+            char Weapon;
 
-        //L'attaque spéciale, si elle a n'a pas été activé
-        if(!BossShoot)
-        {
-            //On lance un dé ! 1 chance sur 7 pour que le tire s'active
-            if(rand()%7 == 1)
+            if (Who == 1)
             {
-                BossShoot = true;
-                PosShoot.first = rand()%(Space.size()-1);
-                PosShoot.second = CurrentLine - 1;
-                IncomingBossAttack = true;
+                Invader = KInsideInvader;
+                Weapon = KMissile;
+
+
             }
-        }
-            //Sinon si le compteur descent à 0 (compteur avant l'attaque) on tire !!!
-        else if(CptShoot == 0)
-        {
-            Shoot2(Space, PosShoot.second, PosShoot.first);
-            CptShoot = KBossShoot;
-            BossShoot = false;
-        }
-            //Sinon bah on descent le compteur :)
-        else
-        {
-            IncomingBossAttack = false;
-            --CptShoot;
-        }
+            else if (Who == 2)
+            {
+                Invader = KInsideBoss;
+                Weapon = KBossWeapon;
+
+            }
+            else if (Who == 3)
+            {
 
 
-    }
 
-    //Fonction qui gére les invader "normaux", cf ManageBoss sans la spécial attaque
-    void ManageInvader (int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & ToShoot, bool & Win, bool & Lost, CVString & Space, unsigned & End)
-    {
+            }
 
-        if((Space[CurrentLine][Space.size()-1] == KInsideInvader && Increment == 1) || (Space[CurrentLine][0] == KInsideInvader && Increment == -1))
-        {
-            DownShift(Space, CurrentLine, Lost, Win);
-            ++CurrentLine;
-            Increment = Increment * (-1);
-        }
-        else
-        {
-            if (Increment == 1)
-                for(unsigned j (Beg+1); --j > 0;)
-                {
-                    swap(Space[CurrentLine][j], Space[CurrentLine][j-1]);
-                }
+            if((Space[CurrentLine][Space.size()-1] == Invader && Increment == 1) || (Space[CurrentLine][0] == Invader && Increment == -1))
+            {
+                DownShift(Space, CurrentLine, Lost, Win);
+                ++CurrentLine;
+                Increment = Increment * (-1);
+            }
+            //Sinon on continue le chemin sur la ligne
             else
-                for(unsigned j (End-1); j < Space.size() -1; ++j)
-                    swap(Space[CurrentLine][j], Space[CurrentLine][j+1]);
-            Beg += Increment;
-            End += Increment;
+            {
+                if (Increment == 1)
+                    for(unsigned j (Beg+1); --j > 0;)
+                    {
+                        swap(Space[CurrentLine][j], Space[CurrentLine][j-1]);
+                    }
+                else
+                    for(unsigned j (End-1); j < Space.size() -1; ++j)
+                        swap(Space[CurrentLine][j], Space[CurrentLine][j+1]);
+                Beg += Increment;
+                End += Increment;
+            }
+            //Quoi qu'il arrive on tire, pûis on a 1 chance sur 3 pour tiré une deuxieme munition
+            if(Who != 1 && rand()%3 == 1) Shoot(Space, CurrentLine+1, End+rand()%(Beg-End), KBossWeapon, KInsideBoss);
+            Shoot(Space, CurrentLine+2, End+rand()%(Beg-End), Weapon, Invader);
+
+            //L'attaque spéciale, si elle a n'a pas été activé
+            if(Who != 1 && !BossShoot)
+            {
+                //On lance un dé ! 1 chance sur 7 pour que le tire s'active
+                if(rand()%5 == 1)
+                {
+                    BossShoot = true;
+                    PosShoot.first = rand()%(Space.size()-1);
+                    PosShoot.second = CurrentLine - 1;
+                    IncomingBossAttack = true;
+                }
+            }
+            //Sinon si le compteur descent à 0 (compteur avant l'attaque) on tire !!!
+            else if( Who != 1 && CptShoot == 0)
+            {
+                Shoot2(Space, PosShoot.second, PosShoot.first);
+                CptShoot = KBossShoot;
+                BossShoot = false;
+            }
+            //Sinon bah on descent le compteur :)
+            else if (Who != 1)
+            {
+                IncomingBossAttack = false;
+                --CptShoot;
+            }
+
+
         }
-
-        if(ToShoot)
-        {
-            if(CurrentLine+1 < Space.size())
-                Shoot(Space, CurrentLine+1, End+(Beg-End)/2, KMissile, KInsideInvader);
-            ToShoot = false;
-        }
-        else
-            ToShoot = true;
-
-    }
-
-    void ToLower(char & c)
-    {
-
-        if(c < 'a' || c > 'z')
-            c += 'Z'-'z';
-
-    }
 
     //Fonction Konami qui test si le konami code a été rentré !
     void Konami(vector <char> & Konami, char c, bool & IsKonami)
@@ -555,42 +532,41 @@ namespace {
         bool Action = false;
         bool Quit = false;
 
-        read(STDIN_FILENO, &c, 1); // Lit un caractére sur l'entrée standard
+            read(STDIN_FILENO, &c, 1); // Lit un caractére sur l'entrée standard
 
-        //ToLower(c);
-        if(c == KShoot) {
-            if (Bullet > 0) {
-                Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
-                --Bullet;
-            }
-            Action = true;
+            //ToLower(c);
+           if(c == KShoot) {
+               if (Bullet > 0) {
+                   Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
+                   --Bullet;
+               }
+               Action = true;
 
-        }
-        else if (c == KLeft) {
-            if (Pos > 0) {
-                swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos - 1]);
-                Pos -= 1;
-            }
-            Action = true;
+           }
+            else if (c == KLeft) {
+               if (Pos > 0) {
+                   swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos - 1]);
+                   Pos -= 1;
+               }
+               Action = true;
 
-        }
-        else if (c == KRight) {
-            if (Pos < Space.size() - 1) {
-                swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos + 1]);
-                Pos += 1;
-            }
-            Action = true;
+           }
+            else if (c == KRight) {
+               if (Pos < Space.size() - 1) {
+                   swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos + 1]);
+                   Pos += 1;
+               }
+               Action = true;
 
-        }
-        /*     case 27:
-                 Quit = true;
-                 Action = true;
-                 break;
-
-             default:
-                 Action = true;
-                 break;
-         }*/
+           }
+           /*     case 27:
+                    Quit = true;
+                    Action = true;
+                    break;
+                default:
+                    Action = true;
+                    break;
+            }*/
 
         tios.c_lflag = old_c_lflag;
         tcsetattr(STDIN_FILENO, TCSANOW, &tios);
@@ -641,12 +617,12 @@ namespace {
         /*if(!keybindread)
         {*/
 
-        keybindread.close();
-        ofstream keybindwrite("bind.key", ios::out | ios::trunc);
-        KRight = 'd';  // déplacement vers la droite
-        KLeft = 'q';  // Déplacement vers la gauche
-        KShoot = 'z'; // tirer
-        keybindwrite << KRight << KLeft << KShoot;
+            keybindread.close();
+            ofstream keybindwrite("bind.key", ios::out | ios::trunc);
+            KRight = 'd';  // déplacement vers la droite
+            KLeft = 'q';  // Déplacement vers la gauche
+            KShoot = 'z'; // tirer
+            keybindwrite << KRight << KLeft << KShoot;
         //}
 
         //FONCTION WORK IN PROGRESS -- By Diogo
@@ -805,7 +781,7 @@ namespace {
 
         //Les valeurs général initialisé
         CVString Space;
-        unsigned Size = 19;
+        unsigned Size = 9;
         InitSpace(Space, Size);
         int Increment = 1;
         unsigned CurrentLine = 0;
@@ -846,7 +822,7 @@ namespace {
             ManageMe(Space, Pos, Bullet, Konami, IsKonami);
             ++HowMany;
             if(HowMany%KRatioMeInvaders == 0)
-                ManageInvader(Increment, CurrentLine, Beg, ToShoot, Win, Lost, Space, End);
+                ManageInvaders(1, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot);
             RecomputeSpace(Space, Win, Lost, NbLives);
             DetectBegEnd(Space, CurrentLine, Beg, End);
             DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
@@ -882,7 +858,7 @@ namespace {
             ManageMe(Space, Pos, Bullet, Konami, IsKonami);
             ++HowMany;
             if(HowMany%KRatioMeBoss == 0)
-                ManageBoss(Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot);
+                ManageInvaders(2, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot);
             RecomputeSpace(Space, Win, Lost, NbLives);
             DetectBegEnd(Space, CurrentLine, Beg, End);
             DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
