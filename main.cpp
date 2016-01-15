@@ -6,6 +6,7 @@
 #include <unistd.h> //sleep
 #include <chrono> //AVEC CTIME, pour un chrono pour le rechargement des bullets
 #include <ctime>
+#include <fstream>
 
 //#define DEBUG
 
@@ -30,9 +31,9 @@ namespace {
     // Constantes Deplacement
 
     const char KEmpty               = ' ';  // case vide de l'écran
-    const char KRight               = '6';  // déplacement vers la droite
-    const char KLeft                = '4';  // Déplacement vers la gauche
-    const char KShoot               = '5';  // Lancé de torpille
+    char KRight;  // déplacement vers la droite
+    char KLeft;  // Déplacement vers la gauche
+    char KShoot;  // Lancé de torpille
 
     //  Constantes liées à l'envahisseur
 
@@ -539,42 +540,34 @@ namespace {
         bool Action = false;
         bool Quit = false;
 
-        while(!Action)
-        {
-
             read(STDIN_FILENO, &c, 1); // Lit un caractére sur l'entrée standard
 
             //ToLower(c);
-            switch ( c )
-            {
-                case 'z':
+           if(c == KShoot) {
+               if (Bullet > 0) {
+                   Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
+                   --Bullet;
+               }
+               Action = true;
 
-                    if (Bullet > 0)
-                    {
-                        Shoot(Space, Space.size()-2, Pos, KTorpedo, KInsideMe);
-                        --Bullet;
-                    }
-                    Action = true;
-                    break;
-                case 'q':
-                    if(Pos > 0)
-                    {
-                        swap(Space[Space.size()-1][Pos], Space[Space.size()-1][Pos-1]);
-                        Pos -=1;
-                    }
-                    Action = true;
-                    break;
+           }
+            else if (c == KLeft) {
+               if (Pos > 0) {
+                   swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos - 1]);
+                   Pos -= 1;
+               }
+               Action = true;
 
-                case 'd':
-                    if(Pos < Space.size()-1)
-                    {
-                        swap(Space[Space.size()-1][Pos], Space[Space.size()-1][Pos+1]);
-                        Pos +=1;
-                    }
-                    Action = true;
-                    break;
+           }
+            else if (c == KRight) {
+               if (Pos < Space.size() - 1) {
+                   swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos + 1]);
+                   Pos += 1;
+               }
+               Action = true;
 
-                case 27:
+           }
+           /*     case 27:
                     Quit = true;
                     Action = true;
                     break;
@@ -582,8 +575,8 @@ namespace {
                 default:
                     Action = true;
                     break;
-            }
-        }
+            }*/
+
         tios.c_lflag = old_c_lflag;
         tcsetattr(STDIN_FILENO, TCSANOW, &tios);
         if(Quit) exit(0);
@@ -625,7 +618,35 @@ namespace {
 
     }
 
-    //Menu général
+    void MajKeybind ()
+    {
+        char key;
+        unsigned line = 1;
+        ifstream keybindread("bind.key", ios::in);
+        if(/*!*/keybindread)
+        {
+
+            keybindread.close();
+            ofstream keybindwrite("bind.key", ios::out | ios::trunc);
+            KRight = 'd';  // déplacement vers la droite
+            KLeft = 'q';  // Déplacement vers la gauche
+            KShoot = 'z'; // tirer
+            keybindwrite << KRight << KLeft << KShoot;
+        }
+
+        //FONCTION WORK IN PROGRESS -- By Diogo
+        /*else
+        {
+            while(keybindread.get(key))
+            {
+                if(line == 1) KRight = key;
+                else if(line == 2) KLeft = key;
+                else if(line == 3) KShoot = key;
+            }
+        }*/
+
+
+    }    //Menu général
     void Menu ()
     {
         unsigned ChoixMenu;
@@ -664,39 +685,58 @@ namespace {
             case 1 :
                 SpaceInvaders();
                 break;
-            case 2 :
-                cout << "Touche pour le déplacement vers la gauche : ";
-                //cin >> KLeft;
-                cout << endl;
-                cout << "Touche pour le déplacement vers la droite : ";
-                //cin >> KRight;
-                cout << endl;
-                cout << "Touche pour lancer un missile : ";
-                //cin >> KShoot;
-                cout << endl;
-                cout << endl;
-                cout << "1 : Retour" << endl;
-                cout << endl;
-                cout << "Choix : ";
-                cin >> ChoixMenu;
-                while(1 != ChoixMenu)
-                {
+            case 2 : {
+                char KeyLeft;
+                char KeyRight;
+                char KeyShoot;
+
+
+                ChoixMenu = 2;
+                while (ChoixMenu == 2) {
+                    // Lit la structure "termios" de l'entrée standard
+                    struct termios tios;
+                    tcgetattr(STDIN_FILENO, &tios);
+
+                    //Sauve l'ancien flag "c_lflag"
+                    tcflag_t old_c_lflag = tios.c_lflag;
+
+
+
+                    // Passe en mode de saisie non canonique
+                    // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
+                    tios.c_lflag &= ~(ICANON);
+                    tios.c_cc[VTIME] = 0;
+                    tios.c_cc[VMIN] = 1;
+                    tcsetattr(STDIN_FILENO, TCSANOW, &tios);
+                    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
+                    ofstream keybindwrite("bind.key", ios::out | ios::trunc);
                     cout << "Touche pour le déplacement vers la gauche : ";
-                    //cin >> KLeft;
+                    sleep(1);
+                    read(STDIN_FILENO, &KeyLeft, 1);
                     cout << endl;
                     cout << "Touche pour le déplacement vers la droite : ";
-                    //cin >> KRight;
+                    sleep(1);
+                    read(STDIN_FILENO, &KeyRight, 1);
                     cout << endl;
                     cout << "Touche pour lancer un missile : ";
-                    //cin >> KShoot;
+                    sleep(1);
+                    read(STDIN_FILENO, &KeyShoot, 1);
+                    keybindwrite << KeyRight << KeyLeft << KeyShoot;
+                    keybindwrite.close();
+                    tios.c_lflag = old_c_lflag;
+                    tcsetattr(STDIN_FILENO, TCSANOW, &tios);
                     cout << endl;
                     cout << endl;
                     cout << "1 : Retour" << endl;
+                    cout << "2 : Recommencer" << endl;
                     cout << endl;
                     cout << "Choix : ";
                     cin >> ChoixMenu;
+                    if(ChoixMenu == 1) Menu();
                 }
+                MajKeybind();
                 break;
+            }
             case 3 :
                 cout << KLeft << " : Se déplacer a gauche." << endl;
                 cout << KRight << " : Se déplacer a droite." << endl;
@@ -841,8 +881,11 @@ namespace {
     }
 }
 
+
+
 int main ()
 {
+    MajKeybind ();
     Menu ();
 
     return 0;
