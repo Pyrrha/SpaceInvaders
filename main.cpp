@@ -623,8 +623,8 @@ namespace {
         char key;
         unsigned line = 1;
         ifstream keybindread("bind.key", ios::in);
-        if(/*!*/keybindread)
-        {
+        /*if(!keybindread)
+        {*/
 
             keybindread.close();
             ofstream keybindwrite("bind.key", ios::out | ios::trunc);
@@ -632,7 +632,7 @@ namespace {
             KLeft = 'q';  // Déplacement vers la gauche
             KShoot = 'z'; // tirer
             keybindwrite << KRight << KLeft << KShoot;
-        }
+        //}
 
         //FONCTION WORK IN PROGRESS -- By Diogo
         /*else
