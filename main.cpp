@@ -37,7 +37,7 @@
 
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
-                       unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot)
+                       unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot, const unsigned & BossLife,const unsigned & UltraBossLife)
     {
 
         //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
@@ -76,7 +76,26 @@
             if(Bullet > i) cout << Couleur(KGreen) << " |";
             else cout << Couleur(KRed) << " |";
         }
+        if (BossLife > 0)
+        {
+            cout << "   " << Couleur(KReset) << "Vie Boss : ";
+            for(unsigned i(0); i < KBossLife; ++i)
+            {
+                if(BossLife > i) cout << Couleur(KYellow) << " ♥";
+                else cout << Couleur(KBlack) << " ♥";
+            }
 
+        }
+        if (UltraBossLife > 0)
+        {
+            cout << "   " << Couleur(KReset) << "Vie Ultra Boss : ";
+            for(unsigned i(0); i < KUltraBossLife; ++i)
+            {
+                if(UltraBossLife > i) cout << Couleur(KMAgenta) << " ♥";
+                else cout << Couleur(KBlack) << " ♥";
+            }
+
+        }
 
 
         //On place le haut  de la grille
@@ -275,7 +294,7 @@
     }
 
     //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
-    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives)
+    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife)
     {
 
 
@@ -286,17 +305,32 @@
 
                 if(Space[i][j] == KTorpedo && i > 0)
                 {
-                    if (Space[i-1][j] == KMissile)
+                    if (Space[i-1][j] == KMissile || Space[i-1][j] == KBossWeapon || Space[i-1][j] == KBossSpecialWeapon || Space[i-1][j] == KUltraBossWeapon || Space[i-1][j] == KUltraBossSpecialWeapon)
                     {
                         Space[i][j] = KEmpty;
                         Space[i-1][j] = KEmpty;
                         continue;
                     }
-                    if(Space[i-1][j] == KInsideInvader || Space[i-1][j] == KInsideBoss || Space[i-1][j] == KInsideUltraBoss)
+                    if(Space[i-1][j] == KInsideInvader)
                     {
                         Remove(Space, i-1, j);
 
                         if (!WhoExist(Space, i-1, KInsideInvader)) Win = true;
+
+
+                    }
+                    else if (Space[i-1][j] == KInsideBoss)
+                    {
+                        --BossLife;
+                        if(BossLife == 0)
+                            Win = true;
+
+                    }
+                    else if (Space[i-1][j] == KInsideUltraBoss)
+                    {
+                        --UltraBossLife;
+                        if(UltraBossLife == 0)
+                            Win = true;
                     }
                     else
                         swap(Space[i][j],Space[i-1][j]);
@@ -455,10 +489,9 @@
             }
 
 
-            PosUltraShoot.first = 0;
-            PosUltraShoot.second = Space.size()-1;
+
             //Sinon si le compteur descent à 0 (compteur avant l'attaque) on tire !!!
-            if( Who > 2 && HowMany%10)
+            if( Who > 2 && HowMany%50 == 0)
             {
                 Shoot3(Space, PosUltraShoot.second, PosUltraShoot.first);
                 ++PosUltraShoot.first;
@@ -775,19 +808,22 @@
         bool IncomingBossAttack = false;
         bool BossShoot = false;
         unsigned CptShoot = KBossShoot;
+        unsigned BossLife = 0;
+
 
         //varUltraBoss
         pair <unsigned, unsigned>PosUltraShoot = make_pair(0,0);
         bool IncomingUltraBossAttack = false;
         bool BossUltraShoot = false;
         unsigned CptUltraShoot = KUltraBossShoot;
+        unsigned UltraBossLife = 0;
 
         //Konami code def variables
         bool IsKonami = false;
         vector <char> Konami;
         Konami.resize(10);
 
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
         start = std::chrono::system_clock::now();
         while(!Win && !Lost)
         {
@@ -802,9 +838,9 @@
             ++HowMany;
             if(HowMany%KRatioMeInvaders == 0)
                 ManageInvaders(1, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany);
-            RecomputeSpace(Space, Win, Lost, NbLives);
+            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
             DetectBegEnd(Space, CurrentLine, Beg, End);
-            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
+            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
             end = std::chrono::system_clock::now();
         }
 
@@ -824,7 +860,8 @@
         Win = false;
         Lost = false;
         ToShoot = false;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
+        BossLife = KBossLife;
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
         while(!Win && !Lost)
         {
             TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
@@ -838,9 +875,9 @@
             ++HowMany;
             if(HowMany%KRatioMeBoss == 0)
                 ManageInvaders(2, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany);
-            RecomputeSpace(Space, Win, Lost, NbLives);
+            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
             DetectBegEnd(Space, CurrentLine, Beg, End);
-            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
+            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
             end = std::chrono::system_clock::now();
         }
 
@@ -860,7 +897,11 @@
         Win = false;
         Lost = false;
         ToShoot = false;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
+        PosUltraShoot.first = 0;
+        PosUltraShoot.second = Space.size()-1;
+        HowMany = 0;
+        UltraBossLife = KUltraBossLife;
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
         while(!Win && !Lost)
         {
             TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
@@ -874,9 +915,9 @@
             ++HowMany;
             if(HowMany%KRatioMeBoss == 0)
                 ManageInvaders(3, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany);
-            RecomputeSpace(Space, Win, Lost, NbLives);
+            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
             DetectBegEnd(Space, CurrentLine, Beg, End);
-            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot);
+            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
             end = std::chrono::system_clock::now();
         }
 
@@ -885,7 +926,7 @@
 
         Couleur(KReset);
     }
-}
+
 
 
 

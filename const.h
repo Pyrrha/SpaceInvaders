@@ -45,6 +45,7 @@ const char KBossSpecialWeapon   = '|';  // Missiles de l'attaque spéciale croix
 const unsigned KBossShoot       = 2;
 const unsigned KBossSize        = 3;
 const unsigned KRatioMeBoss     = 2;
+const unsigned KBossLife        = 4;
 const string KBossColor         = KRed;
 const string KBossSpecialColor  = KCyan;
 
@@ -56,6 +57,7 @@ const char KUltraBossSpecialWeapon   = '|';  // Missiles de l'attaque spéciale 
 const unsigned KUltraBossShoot       = 2;
 const unsigned KUltraBossSize        = 1;
 const unsigned KRatioMeUltraBoss     = 1;
+const unsigned KUltraBossLife        = 4;
 const string KUltraBossColor         = KMAgenta;
 const string KUltraBossSpecialColor  = KYellow;
 
