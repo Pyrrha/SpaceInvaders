@@ -20,6 +20,7 @@ Les différentes étapes à coder prochainement :
 - Items en jeu ;
 - Gestionnaire automatique de niveaux ;
 - Ecran de score.
+- ULTRA BOSS !!!
 
 N'hésitez pas à modifier en rajoutant des choses !
 
