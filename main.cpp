@@ -7,6 +7,7 @@
 #include <chrono> //AVEC CTIME, pour un chrono pour le rechargement des bullets
 #include <ctime>
 #include <fstream>
+#include <map>
 
 #include "const.h"
 
