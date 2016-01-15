@@ -1,3 +1,19 @@
+/*!
+ * \file main.cpp
+ *
+ * \author Tristan,
+ *         Diego,
+ *         Romain,
+ *         Alexandre
+ *
+ * \date 15/01/2016
+ *
+ * \version 3.2.1
+ *
+ * \brief jeu Space Invader
+ *
+ */
+
 #include <termios.h> //FLAG
 #include <iostream>
 #include <vector>
