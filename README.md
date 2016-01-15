@@ -67,3 +67,5 @@ sélectionner est https://github.com/GeeksdelaCave/SpaceInvaders.git. Si vous ne
 
 Sélectionnez ensuite le répertoire où le projet sera cloné. Donnez enfin un nom au répertoire du projet en lui-même, par
 défaut SpaceInvaders. Enfin, le bouton "Clone" pour valider. Le projet actuel devrait s'ouvrir sous vos yeux.
+
+Je modifie
