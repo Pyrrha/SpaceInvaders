@@ -10,7 +10,7 @@
  *
  * \version 3.2.1
  *
- * \brief jeu Space Invader
+ * \brief Space Invader
  *
  */
 
