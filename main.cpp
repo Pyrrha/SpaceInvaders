@@ -12,6 +12,8 @@
 #include "const.h"
 
 //#define DEBUG
+
+
     //Fonction qui renvoie une string qui est égale à la couleur assosié
     string Couleur (const string & coul)
     {
@@ -650,7 +652,17 @@
 
 
     }    //Menu général
-    void Menu ()
+
+
+/*  _____  ___________ _______   ____ ___
+    /     \ \_   _____/ \      \ |    |   \
+    /  \ /  \ |    __)_  /   |   \|    |   /
+    /    Y    \|        \/    |    \    |  /
+    \____|__  /_______  /\____|__  /______/
+    \/        \/         \/
+*/
+
+void Menu ()
     {
         unsigned ChoixMenu;
 
