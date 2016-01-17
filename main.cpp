@@ -518,7 +518,7 @@
             Konami.erase(Konami.begin());
             Konami.push_back(char(c));
         }
-        vector <char> KonamiCode = {'z', 'z', 's', 's', 'q', 'd', 'q', 'd', 'a', 'b'};
+        vector <char> KonamiCode = {'z', 'z', 's', 's', 'q', 'd', 'q', 'd', 'b', 'a'};
         if(Konami == KonamiCode) IsKonami = true;
     }
 
