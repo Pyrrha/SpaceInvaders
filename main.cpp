@@ -613,37 +613,29 @@
 
         cout << endl;
         cout << endl;
-        cout << "j : Rejouer" << endl;
-        cout << "m : Menu" << endl;
-        cout << "q : Quitter" << endl;
-        cout << endl;
-        cout << "Choix : ";
-        cin >> ChoixMenu;
-        cout << endl;
-        struct termios tios;
 
-        while ('j' != ChoixMenu || 'm' != ChoixMenu || 'q' != ChoixMenu)
+        do
         {
-            cout << "j : Rejouer" << endl;
+            cout << "r : Replay" << endl;
             cout << "m : Menu" << endl;
-            cout << "q : Quitter" << endl;
+            cout << "e : Exit" << endl;
             cout << endl;
-            cout << "Choix : ";
+            cout << "> > > ";
             cin >> ChoixMenu;
             cout << endl;
 
             switch (ChoixMenu)
             {
-                case 'j' :
+                case 'r' :
                     SpaceInvaders();
                     break;
                 case 'm' :
                     Menu();
                     break;
-                case 'q' :
+                case 'e' :
                     break;
             }
-        }
+        }while ('r' != ChoixMenu && 'm' != ChoixMenu && 'e' != ChoixMenu);
 
 
     }
@@ -697,10 +689,9 @@
     {
         for(unsigned i (0); i < Option.size(); ++i)
         {
-            Separateur();
             cout << Espaces() << "║" << Option[i] << setw(47 - Option[i].size()) << "║" << endl;
+            Separateur();
         }
-        Separateur();
     }
 
     void MenuHeader ()
@@ -713,11 +704,8 @@
         cout << "      |_|    " << endl;
     }
 
-    void Menu ()
+    void DisplayMenu ()
     {
-        ClearScreen();
-        MenuHeader();
-        char ChoixMenu;
         vector<string> Options = {" p : Play", " c : Commands", " h : Help", " m : Credit", " e : Exit"};
 
         //Affiche la structure du mnenu ainsi que le contenu
@@ -729,6 +717,7 @@
             cout << "═";
         cout << "╗" << endl;
 
+        Separateur();
         OptionsMenu(Options);
 
         cout << Espaces() << "╚";
@@ -738,8 +727,17 @@
         cout << endl;
 
         cout << Espaces() << " > > >  ";
+    }
 
 
+
+    void Menu ()
+    {
+        char ChoixMenu;
+
+        ClearScreen();
+        MenuHeader();
+        DisplayMenu();
 
         // Lit la structure "termios" de l'entrée standard
         struct termios tios;
@@ -824,6 +822,9 @@
 
             case 'e' :
                 break;
+            default :
+                ClearScreen();
+                Menu();
         }
     }
     void SpaceInvaders ()
