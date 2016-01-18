@@ -61,7 +61,7 @@
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                        unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
-                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level)
+                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore)
     {
 
         //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
@@ -85,7 +85,7 @@
             else if(NbLives > 1) ColBord = KYellow;
             else ColBord = KRed;
         }
-        cout << "NIVEAU " << Level << endl;
+        cout << "NIVEAU " << Level << "    Score : " << Score << "    Multiplicateur de score : " << MultScore << endl;
         //On affiche les points de vie restant
         cout << Couleur(KReset) << "Vie : ";
         for(unsigned i(0); i < KMyLives; ++i)
@@ -323,7 +323,7 @@
     }
 
     //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
-    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife)
+    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore)
     {
 
 
@@ -338,19 +338,19 @@
                     {
                         Space[i][j] = KEmpty;
                         Space[i-1][j] = KEmpty;
+                        Score += KScoreByWeapon*MultScore;
                         continue;
                     }
                     if(Space[i-1][j] == KInsideInvader)
                     {
                         Remove(Space, i-1, j);
-
+                        Score += KScoreByInvader*MultScore;
                         if (!WhoExist(Space, i-1, KInsideInvader)) Win = true;
-
-
                     }
                     else if (Space[i-1][j] == KInsideBoss)
                     {
                         Space[i][j] = KEmpty;
+                        Score += KScoreByBoss*MultScore;
                         --BossLife;
                         if(BossLife == 0)
                             Win = true;
@@ -359,6 +359,7 @@
                     else if (Space[i-1][j] == KInsideUltraBoss)
                     {
                         Space[i][j] = KEmpty;
+                        Score += KScoreByUltraBoss*MultScore;
                         --UltraBossLife;
                         if(UltraBossLife == 0)
                             Win = true;
@@ -390,10 +391,12 @@
                     {
                         Space[i][j] = KEmpty;
                         Space[i+1][j] = KEmpty;
+                        Score += KScoreByWeapon*MultScore;
                         continue;
                     }
                     else if(Space[i+1][j] == KInsideMe)
                     {
+                        MultScore = 1;
                         --NbLives;
                         Remove(Space, i, j);
                         if(NbLives == 0)
@@ -859,6 +862,8 @@
 
         //Les valeurs général initialisé
         CVString Space;
+        float Score = 0.0;
+        float MultScore = 1.0;
         unsigned Size = 21;
         InitSpace(Space, Size);
         int Increment = 1;
@@ -899,7 +904,7 @@
         unsigned Level = 1;
         unsigned Ratio;
         unsigned Who;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore);
         start = std::chrono::system_clock::now();
 
 
@@ -922,6 +927,7 @@
                 BossLife = KBossLife;
                 Ratio = KRatioMeBoss;
                 Who = 2;
+                IncomingBossAttack = false;
 
             }
             else if(Level%16 == 0)
@@ -942,6 +948,7 @@
                 UltraBossLife = KUltraBossLife;
                 Ratio = KRatioMeUltraBoss;
                 Who = 3;
+                IncomingBossAttack = false;
             }
             else
             {
@@ -957,7 +964,7 @@
                 ToShoot = false;
                 Ratio = KRatioMeInvaders;
                 Who = 1;
-
+                IncomingBossAttack = false;
             }
 
             while(!Win && !Lost)
@@ -973,12 +980,15 @@
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
-                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
-                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore);
+                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
                 //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
                 end = std::chrono::system_clock::now();
             }
+            if(Who == 1) MultScore += KMultScoreByInvader;
+            else if (Who == 2) MultScore += KMultScoreByBoss;
+            else if (Who == 3) MultScore += KMultScoreByUltraBoss;
             if(Lost)
                 DisplayScore(Win, Lost);
             ++Level;

@@ -87,3 +87,14 @@ typedef vector<string> CVString;    // c'est le type de l'écran (l'espace, la m
 const string KEmptyLine (KSizeLine, KEmpty);  // Une ligne vide de la matrice
 
 const unsigned KRatioMeInvaders = 4;    // Nombre de fois où c'est le tour du joueur pour un tour de l'envahisseur
+
+
+// Constantes liées au score
+
+const unsigned KScoreByWeapon       = 10;
+const unsigned KScoreByInvader      = 100;
+const unsigned KScoreByBoss         = 500;
+const unsigned KScoreByUltraBoss    = 1000;
+const float KMultScoreByInvader     = 0.1;
+const float KMultScoreByBoss        = 0.3;
+const float KMultScoreByUltraBoss   = 1.0;
