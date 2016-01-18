@@ -22,6 +22,7 @@
 #include <map>
 
 #include "const.h"
+#include "sounds.h"
 
 //#define DEBUG
 
@@ -565,6 +566,7 @@
             //ToLower(c);
            if(c == KShoot) {
                if (Bullet > 0) {
+                   JoueLeSon(0);
                    Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
                    --Bullet;
                }
@@ -973,6 +975,8 @@
 
 int main ()
 {
+    ChargeLesSons();
+
     ClearScreen();
     MajKeybind ();
     Menu ();
