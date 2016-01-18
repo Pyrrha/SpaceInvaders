@@ -754,7 +754,7 @@
         // Passe en mode de saisie non canonique
         // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
         tios.c_lflag &= ~(ICANON|ECHO);
-        tios.c_cc[VTIME] = 3;
+        tios.c_cc[VTIME] = 0;
         tios.c_cc[VMIN] = 0;
         tcsetattr(STDIN_FILENO, TCSANOW, &tios);
         // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */

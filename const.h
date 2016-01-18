@@ -150,6 +150,11 @@ const unsigned KBossSize        = 3;
 const unsigned KRatioMeBoss     = 2;
 
 /*!
+ * \brief Alias nombre de vie du boss
+ */
+const unsigned KBossLife     = 4;
+
+/*!
  * \brief Alias la couleur du boss est le rouge
  */
 const string KBossColor         = KRed;
