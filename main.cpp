@@ -1,3 +1,15 @@
+/*!
+ * \file main.cpp
+ *
+ * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
+ *
+ * \date 18/01/2016
+ *
+ * \version 3.2.6
+ *
+ * \brief c'est le corps de notre pojets quuii n'est d'autre qu'un space invader
+ */
+
 #include <termios.h> //FLAG
 #include <iostream>
 #include <vector>
