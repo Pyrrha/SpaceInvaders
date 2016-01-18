@@ -628,7 +628,9 @@
         else if (Lost)
         {
             cout << "perdu ! Dommage, vous ferez mieux la prochaine fois ! :)" << endl;
+#ifdef SOUND
             JoueLeSon(3);
+#endif
         }
         else
         {
