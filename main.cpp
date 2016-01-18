@@ -1,3 +1,15 @@
+/*!
+ * \file main.cpp
+ *
+ * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
+ *
+ * \date 18/01/2016
+ *
+ * \version 3.2.6
+ *
+ * \brief c'est le corps de notre pojets quuii n'est d'autre qu'un space invader
+ */
+
 #include <termios.h> //FLAG
 #include <iostream>
 #include <vector>
@@ -518,7 +530,7 @@
             Konami.erase(Konami.begin());
             Konami.push_back(char(c));
         }
-        vector <char> KonamiCode = {'z', 'z', 's', 's', 'q', 'd', 'q', 'd', 'a', 'b'};
+        vector <char> KonamiCode = {'z', 'z', 's', 's', 'q', 'd', 'q', 'd', 'b', 'a'};
         if(Konami == KonamiCode) IsKonami = true;
     }
 
