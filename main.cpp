@@ -645,8 +645,8 @@
         char key;
         unsigned line = 1;
         ifstream keybindread("bind.key", ios::in);
-        /*if(!keybindread)
-        {*/
+        if(!keybindread)
+        {
 
             keybindread.close();
             ofstream keybindwrite("bind.key", ios::out | ios::trunc);
@@ -654,18 +654,19 @@
             KLeft = 'q';  // Déplacement vers la gauche
             KShoot = 'z'; // tirer
             keybindwrite << KRight << KLeft << KShoot;
-        //}
+        }
 
-        //FONCTION WORK IN PROGRESS -- By Diogo
-        /*else
+
+        else
         {
             while(keybindread.get(key))
             {
                 if(line == 1) KRight = key;
                 else if(line == 2) KLeft = key;
                 else if(line == 3) KShoot = key;
+                ++line;
             }
-        }*/
+        }
 
 
     }    //Menu général
@@ -786,16 +787,16 @@
                 cin >> KeyShoot;
                 keybindwrite << KeyRight << KeyLeft << KeyShoot;
                 keybindwrite.close();
-                Menu();
                 MajKeybind();
+                Menu();
                 break;
             }
             case 'h' :
             {
                 ClearScreen();
-                cout << KeyLeft << " : Move to the left." << endl;
-                cout << KeyRight << " : Move to the right." << endl;
-                cout << KeyShoot << " : Shoot." << endl;
+                cout << KLeft << " : Move to the left." << endl;
+                cout << KRight << " : Move to the right." << endl;
+                cout << KShoot << " : Shoot." << endl;
                 cout << endl;
                 cout << "Press any case to go back";
                 cin >> ChoixMenu;
