@@ -10,6 +10,13 @@
  * \brief c'est le corps de notre pojets quuii n'est d'autre qu'un space invader
  */
 
+/*!
+ * \brief Variables de pré-réglage
+ */
+//#define DEBUG
+//#define SOUND
+
+
 #include <termios.h> //FLAG
 #include <iostream>
 #include <vector>
@@ -22,9 +29,10 @@
 #include <map>
 
 #include "const.h"
+#ifdef SOUND
 #include "sounds.h"
+#endif
 
-//#define DEBUG
 
 
     //Fonction qui renvoie une string qui est égale à la couleur assosié
@@ -566,7 +574,9 @@
             //ToLower(c);
            if(c == KShoot) {
                if (Bullet > 0) {
+#ifdef SOUND
                    JoueLeSon(0);
+#endif
                    Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
                    --Bullet;
                }
@@ -985,19 +995,12 @@
 
 int main ()
 {
+#ifdef SOUND
     ChargeLesSons();
-
-    JoueLeSon(0);
-    sleep(2);
-
-    JoueLeSon(1);
-    sleep(2);
-
-    JoueLeSon(3);
-    sleep(4);
-    /*ClearScreen();
+#endif
+    ClearScreen();
     MajKeybind ();
-    Menu ();*/
+    Menu ();
 
     return 0;
 }
