@@ -341,6 +341,7 @@
                     }
                     else if (Space[i-1][j] == KInsideBoss)
                     {
+                        Space[i][j] = KEmpty;
                         --BossLife;
                         if(BossLife == 0)
                             Win = true;
@@ -348,6 +349,7 @@
                     }
                     else if (Space[i-1][j] == KInsideUltraBoss)
                     {
+                        Space[i][j] = KEmpty;
                         --UltraBossLife;
                         if(UltraBossLife == 0)
                             Win = true;
@@ -362,7 +364,7 @@
                 //Si la case du dessous (si existante) n'est pas un missile spécial alors bug alors efface
                 else if ((Space[i][j] == KBossSpecialWeapon || Space[i][j] == KUltraBossSpecialWeapon) && i < Space.size() && (Space[i+1][j] != KBossSpecialWeapon || Space[i+1][j] != KUltraBossSpecialWeapon) && Space[i+1][j] != KInsideMe)
                     Space[i][j] = KEmpty;
-                ////Disparition du missile à la case donnée (joueur)
+                //Disparition du missile à la case donnée (joueur)
                 else if(Space[i][j] == KTorpedo && i == 0)
                     Space[i][j] = KEmpty;
 
@@ -419,7 +421,7 @@
 
         for(unsigned i(Line); i < Space.size(); ++i)
             //Résolution du bug de disparition du boss lorsque attaque spécial au dessus de lui
-            if (Space[i][Column] != KInsideBoss && Space[i][Column] != KInsideMe )
+            if (Space[i][Column] != KInsideBoss && Space[i][Column] != KInsideUltraBoss && Space[i][Column] != KInsideMe )
                 Space[i][Column] = KBossSpecialWeapon;
 
 
@@ -479,7 +481,7 @@
                 End += Increment;
             }
             //Quoi qu'il arrive on tire, pûis on a 1 chance sur 3 pour tiré une deuxieme munition
-            if(Who != 1 && rand()%3 == 1) Shoot(Space, CurrentLine+1, End+rand()%(Beg-End), Weapon, KInsideBoss);
+            if(Who != 1 && rand()%3 == 1) Shoot(Space, CurrentLine+1, End+rand()%(Beg-End), Weapon, Invader);
             Shoot(Space, CurrentLine+2, End+rand()%(Beg-End), Weapon, Invader);
 
             //L'attaque spéciale, si elle a n'a pas été activé
@@ -881,7 +883,7 @@
         {
             //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
             Bullet = KMyBullet;
-            /*if(Level%5 == 0)
+            if(Level%5 == 0)
             {
                 InitBossSpace(Space, Size);
                 Increment = 1;
@@ -897,8 +899,8 @@
                 Ratio = KRatioMeBoss;
                 Who = 2;
 
-            }*/
-            /*else */if(Level%16 == 0)
+            }
+            else if(Level%16 == 0)
             {
                 InitUltraBossSpace(Space, Size);
                 Increment = 1;
@@ -919,24 +921,7 @@
             }
             else
             {
-                InitUltraBossSpace(Space, Size);
-                Increment = 1;
-                CurrentLine = 0;
-                HowMany = 0;
-                Beg = KUltraBossSize;
-                End = 0;
-                Pos = ((Space.size()-1)/2);
-                Win = false;
-                Lost = false;
-                ToShoot = false;
-                PosUltraShoot.first = 0;
-                PosUltraShoot.second = Space.size()-1;
-                HowMany = 0;
-                UltraBossLife = KUltraBossLife;
-                Ratio = KRatioMeUltraBoss;
-                Who = 3;
-
-                /*InitSpace(Space, Size);
+               InitSpace(Space, Size);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
@@ -947,7 +932,7 @@
                 Lost = false;
                 ToShoot = false;
                 Ratio = KRatioMeInvaders;
-                Who = 1;*/
+                Who = 1;
 
             }
 
@@ -980,106 +965,7 @@
         ClearScreen();
         cout << Couleur(KReset);
         DisplayScore(Win, Lost);
-        /*while(!Win && !Lost)
-        {
-            TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
-                    (end-start).count();
-            if(TimeElapsed%KReloadBullet == 0)
-            {
-                if(Bullet < KMyBullet)
-                    ++Bullet;
-            }
-            ManageMe(Space, Pos, Bullet, Konami, IsKonami);
-            ++HowMany;
-            if(HowMany%KRatioMeInvaders == 0)
-                ManageInvaders(1, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany);
-            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
-            DetectBegEnd(Space, CurrentLine, Beg, End);
-            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
-            end = std::chrono::system_clock::now();
-        }
 
-        if(Lost)
-            DisplayScore(Win, Lost);
-
-        //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
-        Bullet = KMyBullet;
-
-        InitBossSpace(Space, Size);
-        Increment = 1;
-        CurrentLine = 0;
-        HowMany = 0;
-        Beg = KBossSize;
-        End = 0;
-        Pos = ((Space.size()-1)/2);
-        Win = false;
-        Lost = false;
-        ToShoot = false;
-        BossLife = KBossLife;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
-        while(!Win && !Lost)
-        {
-            TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
-                    (end-start).count();
-            if(TimeElapsed%KReloadBullet == 0)
-            {
-                if(Bullet < KMyBullet)
-                    ++Bullet;
-            }
-            ManageMe(Space, Pos, Bullet, Konami, IsKonami);
-            ++HowMany;
-            if(HowMany%KRatioMeBoss == 0)
-                ManageInvaders(2, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany);
-            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
-            DetectBegEnd(Space, CurrentLine, Beg, End);
-            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
-            end = std::chrono::system_clock::now();
-        }
-
-        if(Lost)
-            DisplayScore(Win, Lost);
-*/
-        //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
-        /*Bullet = KMyBullet;
-
-        InitUltraBossSpace(Space, Size);
-        Increment = 1;
-        CurrentLine = 0;
-        HowMany = 0;
-        Beg = KUltraBossSize;
-        End = 0;
-        Pos = ((Space.size()-1)/2);
-        Win = false;
-        Lost = false;
-        ToShoot = false;
-        PosUltraShoot.first = 0;
-        PosUltraShoot.second = Space.size()-1;
-        HowMany = 0;
-        UltraBossLife = KUltraBossLife;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
-        while(!Win && !Lost)
-        {
-            TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
-                    (end-start).count();
-            if(TimeElapsed%KReloadBullet == 0)
-            {
-                if(Bullet < KMyBullet)
-                    ++Bullet;
-            }
-            ManageMe(Space, Pos, Bullet, Konami, IsKonami);
-            ++HowMany;
-            if(HowMany%KRatioMeBoss == 0)
-                ManageInvaders(3, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany);
-            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
-            DetectBegEnd(Space, CurrentLine, Beg, End);
-            DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife);
-            end = std::chrono::system_clock::now();
-        }*/
-
-        //ClearScreen();
-        //DisplayScore(Win, Lost);
-
-        //Couleur(KReset);
     }
 
 
