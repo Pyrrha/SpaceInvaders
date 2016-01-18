@@ -611,9 +611,19 @@
     {
         char ChoixMenu;
         cout << "Vous venez de terminé la partie et vous avez ";
-        if (Win) cout << "gagné ! Félicitation :)" << endl;
-        else if (Lost) cout << "perdu ! Dommage, vous ferez mieux la prochaine fois ! :)" << endl;
-        else cerr << "euh.. Il semble y avoir un probleme..." << endl;
+        if (Win)
+        {
+            cout << "gagné ! Félicitation :)" << endl;
+        }
+        else if (Lost)
+        {
+            cout << "perdu ! Dommage, vous ferez mieux la prochaine fois ! :)" << endl;
+            JoueLeSon(3);
+        }
+        else
+        {
+            cerr << "euh.. Il semble y avoir un probleme..." << endl;
+        }
 
         cout << endl;
         cout << endl;
@@ -977,9 +987,17 @@ int main ()
 {
     ChargeLesSons();
 
-    ClearScreen();
+    JoueLeSon(0);
+    sleep(2);
+
+    JoueLeSon(1);
+    sleep(2);
+
+    JoueLeSon(3);
+    sleep(4);
+    /*ClearScreen();
     MajKeybind ();
-    Menu ();
+    Menu ();*/
 
     return 0;
 }
