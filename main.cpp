@@ -593,33 +593,46 @@
     //Menuaprès avoir fini !
     void DisplayScore(const bool & Win, const bool & Lost)
     {
-        unsigned ChoixMenu;
+        char ChoixMenu;
         cout << "Vous venez de terminé la partie et vous avez ";
         if (Win) cout << "gagné ! Félicitation :)" << endl;
         else if (Lost) cout << "perdu ! Dommage, vous ferez mieux la prochaine fois ! :)" << endl;
         else cerr << "euh.. Il semble y avoir un probleme..." << endl;
 
-        cout << "1 : Rejouer" << endl;
-        cout << "2 : Menu" << endl;
-        cout << "0 : Quitter" << endl;
+        cout << endl;
+        cout << endl;
+        cout << "j : Rejouer" << endl;
+        cout << "m : Menu" << endl;
+        cout << "q : Quitter" << endl;
         cout << endl;
         cout << "Choix : ";
         cin >> ChoixMenu;
         cout << endl;
+        struct termios tios;
 
-        switch (ChoixMenu)
+        while ('j' != ChoixMenu || 'm' != ChoixMenu || 'q' != ChoixMenu)
         {
-            case 1 :
-                SpaceInvaders();
-                break;
-            case 2 :
-                Menu();
-                break;
-            case 0 :
-                break;
-            default :
-                cerr << ChoixMenu << " ne fais pas partis des choix." << endl;
+            cout << "j : Rejouer" << endl;
+            cout << "m : Menu" << endl;
+            cout << "q : Quitter" << endl;
+            cout << endl;
+            cout << "Choix : ";
+            cin >> ChoixMenu;
+            cout << endl;
+
+            switch (ChoixMenu)
+            {
+                case 'j' :
+                    SpaceInvaders();
+                    break;
+                case 'm' :
+                    Menu();
+                    break;
+                case 'q' :
+                    break;
+            }
         }
+
 
     }
 
@@ -653,126 +666,137 @@
 
     }    //Menu général
 
-
-/*  _____  ___________ _______   ____ ___
-    /     \ \_   _____/ \      \ |    |   \
-    /  \ /  \ |    __)_  /   |   \|    |   /
-    /    Y    \|        \/    |    \    |  /
-    \____|__  /_______  /\____|__  /______/
-    \/        \/         \/
-*/
-
-void Menu ()
+    string Espaces (unsigned NbEspace = 13)
     {
-        unsigned ChoixMenu;
+        string Espaces;
+        for (unsigned i (0); i < NbEspace; ++i)
+            Espaces += " ";
+        return Espaces;
+    }
 
-        cout << "╔";
+    void Separateur (unsigned NbSep = 1)
+    {
+        for(unsigned i (0); i < NbSep; ++i)
+            cout << Espaces() << "║" << setw(47) << "║" << endl;
+
+    }
+
+    void OptionsMenu (vector<string> Option)
+    {
+        for(unsigned i (0); i < Option.size(); ++i)
+        {
+            Separateur();
+            cout << Espaces() << "║" << Option[i] << setw(47 - Option[i].size()) << "║" << endl;
+        }
+        Separateur();
+    }
+
+    void MenuHeader ()
+    {
+        cout << " ____                          ___                     _             " << endl;
+        cout << "/ ___| _ __   __ _  ___ ___   |_ _|_ ____   ____ _  __| | ___ _ __ ___ " << endl;
+        cout << "\\___ \\| '_ \\ / _` |/ __/ _ \\   | || '_ \\ \\ / / _` |/ _` |/ _ \\ '__/ __|" << endl;
+        cout << " ___) | |_) | (_| | (_|  __/   | || | | \\ V / (_| | (_| |  __/ |  \\__ \\ " << endl;
+        cout << "|____/| .__/ \\__,_|\\___\\___|  |___|_| |_|\\_/ \\__,_|\\__,_|\\___|_|  |___/" << endl;
+        cout << "      |_|    " << endl;
+    }
+
+    void Menu ()
+    {
+        ClearScreen();
+        MenuHeader();
+        char ChoixMenu;
+        vector<string> Options = {" p : Play", " c : Commands", " h : Help", " m : Credit", " e : Exit"};
+
+        //Affiche la structure du mnenu ainsi que le contenu
+        cout << Espaces() << "╔";
         for(unsigned i (1); i < 20; ++i)
             cout << "═";
         cout << " MENU ";
-
         for(unsigned i (0); i < 19; ++i)
             cout << "═";
-
         cout << "╗" << endl;
-        cout << "║" << setw(47) << "║" << endl;
-        cout << "║" << " 1 : jouer" << setw(37) << "║" << endl;
-        cout << "║" << setw(47) << "║" << endl;
-        cout << "║" << " 2 : Commandes" << setw(33) << "║" << endl;
-        cout << "║" << setw(47) << "║" << endl;
-        cout << "║" << " 3 : Aide" << setw(38) << "║" << endl;
-        cout << "║" << setw(47) << "║" << endl;
-        cout << "║" << " 4 : Credit" << setw(36) << "║" << endl;
-        cout << "║" << setw(47) << "║" << endl;
-        cout << "║" << " 0 : Quitter" << setw(35) << "║" << endl;
-        cout << "║" << setw(47) << "║" << endl;
-        cout << "╚";
 
+        OptionsMenu(Options);
+
+        cout << Espaces() << "╚";
         for(unsigned i (1); i < 45; ++i)
-            cout << "═";
+            cout  << "═";
         cout << "╝" << endl;
-        cout << "Choix : ";
+        cout << endl;
+
+        cout << Espaces() << " > > >  ";
+
+
+
+        // Lit la structure "termios" de l'entrée standard
+        struct termios tios;
+        tcgetattr(STDIN_FILENO, &tios);
+
+        //Sauve l'ancien flag "c_lflag"
+        tcflag_t old_c_lflag = tios.c_lflag;
+
         cin >> ChoixMenu;
         cout << endl;
 
+        // Passe en mode de saisie non canonique
+        // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
+        tios.c_lflag &= ~(ICANON|ECHO);
+        tios.c_cc[VTIME] = 3;
+        tios.c_cc[VMIN] = 0;
+        tcsetattr(STDIN_FILENO, TCSANOW, &tios);
+        // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
+
+        read(STDIN_FILENO, &ChoixMenu, 1); // Lit un caractére sur l'entrée standard
+
+        tios.c_lflag = old_c_lflag;
+        tcsetattr(STDIN_FILENO, TCSANOW, &tios);
+
+        char KeyLeft;
+        char KeyRight;
+        char KeyShoot;
+
         switch (ChoixMenu)
         {
-            case 1 :
+            case 'p' :
+                ClearScreen();
                 SpaceInvaders();
                 break;
-            case 2 : {
-                char KeyLeft;
-                char KeyRight;
-                char KeyShoot;
-
-
-                ChoixMenu = 2;
-                while (ChoixMenu == 2) {
-                    // Lit la structure "termios" de l'entrée standard
-                    struct termios tios;
-                    tcgetattr(STDIN_FILENO, &tios);
-
-                    //Sauve l'ancien flag "c_lflag"
-                    tcflag_t old_c_lflag = tios.c_lflag;
-
-
-
-                    // Passe en mode de saisie non canonique
-                    // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
-                    tios.c_lflag &= ~(ICANON);
-                    tios.c_cc[VTIME] = 0;
-                    tios.c_cc[VMIN] = 1;
-                    tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-                    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
-                    ofstream keybindwrite("bind.key", ios::out | ios::trunc);
-                    cout << "Touche pour le déplacement vers la gauche : ";
-                    sleep(1);
-                    read(STDIN_FILENO, &KeyLeft, 1);
-                    cout << endl;
-                    cout << "Touche pour le déplacement vers la droite : ";
-                    sleep(1);
-                    read(STDIN_FILENO, &KeyRight, 1);
-                    cout << endl;
-                    cout << "Touche pour lancer un missile : ";
-                    sleep(1);
-                    read(STDIN_FILENO, &KeyShoot, 1);
-                    keybindwrite << KeyRight << KeyLeft << KeyShoot;
-                    keybindwrite.close();
-                    tios.c_lflag = old_c_lflag;
-                    tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-                    cout << endl;
-                    cout << endl;
-                    cout << "1 : Retour" << endl;
-                    cout << "2 : Recommencer" << endl;
-                    cout << endl;
-                    cout << "Choix : ";
-                    cin >> ChoixMenu;
-                    if(ChoixMenu == 1) Menu();
-                }
+            case 'c' :
+            {
+                ClearScreen();
+                ofstream keybindwrite("bind.key", ios::out | ios::trunc);
+                cout << "Key to Move to the left : ";
+                cin >> KeyLeft;
+                cout << endl;
+                cout << "Key to Move to the right : ";
+                cin >> KeyRight;
+                cout << endl;
+                cout << "Key to shoot : ";
+                cin >> KeyShoot;
+                keybindwrite << KeyRight << KeyLeft << KeyShoot;
+                keybindwrite.close();
+                Menu();
                 MajKeybind();
                 break;
             }
-            case 3 :
-                cout << KLeft << " : Se déplacer a gauche." << endl;
-                cout << KRight << " : Se déplacer a droite." << endl;
-                cout << KShoot << " : Lancer un missile." << endl;
+            case 'h' :
+            {
+                ClearScreen();
+                cout << KeyLeft << " : Move to the left." << endl;
+                cout << KeyRight << " : Move to the right." << endl;
+                cout << KeyShoot << " : Shoot." << endl;
                 cout << endl;
-                cout << endl;
-                cout << "1 : Retour" << endl;
-                cout << endl;
-                cout << "Choix : ";
+                cout << "Press any case to go back";
                 cin >> ChoixMenu;
-                switch (ChoixMenu)
-                {
-                    case 1 :
-                        Menu();
-                        break;
-                    default :
-                        cerr << ChoixMenu << " ne fait pas partit des choix." << endl;
-                }
+                Menu();
                 break;
-            case 4 :
-                cout << "Programmeurs :" << endl;
+            }
+
+            case 'm' :
+            {
+                ClearScreen();
+                cout << "programmers :" << endl;
                 cout << endl;
                 cout << "Diogo DE ALMEIDA" << endl;
                 cout << "Tristan DIETZ" << endl;
@@ -780,23 +804,13 @@ void Menu ()
                 cout << "Alexandre CARON" << endl;
                 cout << endl;
                 cout << endl;
-                cout << "1 : Retour" << endl;
-                cout << endl;
-                cout << "Choix : ";
+                cout << "Press any case to go back";
                 cin >> ChoixMenu;
-                switch (ChoixMenu)
-                {
-                    case 1 :
-                        Menu();
-                        break;
-                    default :
-                        cerr << ChoixMenu << " ne fait pas partit des choix." << endl;
-                }
+                Menu();
                 break;
-            case 0 :
-                break;
-            default :
-                cerr << ChoixMenu << " n'est pas un choix." << endl;
+            }
+
+            case 'e' :
                 break;
         }
     }
@@ -1041,6 +1055,7 @@ void Menu ()
 
 int main ()
 {
+    ClearScreen();
     MajKeybind ();
     Menu ();
 
@@ -1050,4 +1065,3 @@ int main ()
 #ifdef DEBUG
 #undef DEBUG
 #endif
-
