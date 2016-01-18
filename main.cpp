@@ -404,7 +404,7 @@
 
         for(unsigned i(0); i < Space.size(); ++i)
             //Résolution du bug de disparition du boss lorsque attaque spécial au dessus de lui
-            if (Space[i][ColumnA] != KInsideUltraBoss && Space[i][ColumnB] != KInsideUltraBoss)
+            if (Space[i][ColumnA] != KInsideUltraBoss && Space[i][ColumnB] != KInsideUltraBoss && Space[i][ColumnA] != KInsideMe && Space[i][ColumnB] != KInsideMe)
             {
                 Space[i][ColumnB] = KUltraBossSpecialWeapon;
                 Space[i][ColumnA] = KUltraBossSpecialWeapon;
@@ -419,7 +419,7 @@
 
         for(unsigned i(Line); i < Space.size(); ++i)
             //Résolution du bug de disparition du boss lorsque attaque spécial au dessus de lui
-            if (Space[i][Column] != KInsideBoss)
+            if (Space[i][Column] != KInsideBoss && Space[i][Column] != KInsideMe )
                 Space[i][Column] = KBossSpecialWeapon;
 
 
@@ -522,7 +522,7 @@
 
         }
 
-    //Fonction Konami qui test si le konami code a été rentré !
+    //Fonction Konami qui test si le Konami code a été rentré !
     void Konami(vector <char> & Konami, char c, bool & IsKonami)
     {
         if(c != '\0')
@@ -879,7 +879,7 @@
         {
             //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
             Bullet = KMyBullet;
-            if(Level%5 == 0)
+            /*if(Level%5 == 0)
             {
                 InitBossSpace(Space, Size);
                 Increment = 1;
@@ -895,8 +895,8 @@
                 Ratio = KRatioMeBoss;
                 Who = 2;
 
-            }
-            else if(Level%16 == 0)
+            }*/
+            /*else */if(Level%16 == 0)
             {
                 InitUltraBossSpace(Space, Size);
                 Increment = 1;
@@ -917,7 +917,24 @@
             }
             else
             {
-                InitSpace(Space, Size);
+                InitUltraBossSpace(Space, Size);
+                Increment = 1;
+                CurrentLine = 0;
+                HowMany = 0;
+                Beg = KUltraBossSize;
+                End = 0;
+                Pos = ((Space.size()-1)/2);
+                Win = false;
+                Lost = false;
+                ToShoot = false;
+                PosUltraShoot.first = 0;
+                PosUltraShoot.second = Space.size()-1;
+                HowMany = 0;
+                UltraBossLife = KUltraBossLife;
+                Ratio = KRatioMeUltraBoss;
+                Who = 3;
+
+                /*InitSpace(Space, Size);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
@@ -928,7 +945,7 @@
                 Lost = false;
                 ToShoot = false;
                 Ratio = KRatioMeInvaders;
-                Who = 1;
+                Who = 1;*/
 
             }
 
@@ -945,9 +962,10 @@
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
                 RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
-                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
+                //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
                 end = std::chrono::system_clock::now();
             }
             if(Lost)
