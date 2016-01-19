@@ -16,11 +16,11 @@ Le Groupe 2 est fier de vous compter dans ses rangs, faites-en sorte d'y rester.
 
 Les différentes étapes à coder prochainement :
 
-- Bouclier ;
-- Items en jeu ;
-- Gestionnaire automatique de niveaux ;
-- Ecran de score.
-- ULTRA BOSS !!!
+- Bouclier ; -- DONE
+- Items en jeu ; --WORK IN PROGRESS
+- Gestionnaire automatique de niveaux ; --DONE
+- Ecran de score. -- WORK IN PROGRESS
+- ULTRA BOSS !!! -- DONE -- BUG SEGFAULT ??
 
 N'hésitez pas à modifier en rajoutant des choses !
 
