@@ -81,6 +81,11 @@ const unsigned KMyLives			= 4; // Vie du joueur
 const unsigned KMyBullet        = 3; //Nombre de munition
 const unsigned KReloadBullet	= 15; //temps de rechargement
 
+//Constante liées au temps
+typedef std::chrono::high_resolution_clock Time;
+typedef std::chrono::milliseconds ms;
+typedef std::chrono::duration<float> fsec;
+
 // Constantes liées à l'eapace (l'écran)
 
 const unsigned KSizeLine   = 40;   // Nombre de caractères par ligne

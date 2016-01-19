@@ -60,7 +60,7 @@
 
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
-                       unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
+                       unsigned End, unsigned Beg, ms TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
                        const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore, vector <pair<unsigned, unsigned>> Shield)
     {
 
@@ -70,7 +70,7 @@
         vector <string> KonamiColor = {KBlue, KCyan, KRed, KGreen, KYellow, KMAgenta};
         srand(time(0));
 #ifdef DEBUG
-        cout << "Beg : " << Beg << "   End : " << End << "    Shot : " << End+(Beg-End)/2 << "   Temps : " << TimeElapsed << endl;
+        cout << "Beg : " << Beg << "   End : " << End << "    Shot : " << End+(Beg-End)/2 << "   Temps : " << TimeElapsed.count() << endl;
         cout << "Konami : " << IsKonami << endl;
 #endif // define
 
@@ -943,9 +943,8 @@
         bool ToShoot = false;
         unsigned NbLives = KMyLives;
         unsigned Bullet = KMyBullet;
-        std::chrono::time_point<std::chrono::system_clock> start, end;
-        unsigned TimeElapsed = 0;
-
+        ms TimeElapsedMS;
+        fsec TimeElapsed;
         //varBoss
         pair <unsigned, unsigned>PosShoot = make_pair(0,0);
         bool IncomingBossAttack = false;
@@ -970,18 +969,17 @@
         unsigned Level = 1;
         unsigned Ratio;
         unsigned Who;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
-        start = std::chrono::system_clock::now();
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
 
 
-        while(Level != 50)
+        while(Level != 51)
         {
             //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
             Bullet = KMyBullet;
             if(Level%5 == 0) Line -= 1;
             if(Level%4 == 0) Column += 1;
             if(Level%10 == 0) Time -= 1;
-            if(Level%5 == 0)
+            if(Level%10 == 0)
             {
                 InitBossSpace(Space, Line, Column);
                 InitShield(Shield, Column);
@@ -1000,7 +998,7 @@
                 IncomingBossAttack = false;
 
             }
-            else if(Level%16 == 0)
+            else if(Level%50 == 0)
             {
                 InitUltraBossSpace(Space, Line, Column);
                 InitShield(Shield, Column);
@@ -1042,22 +1040,25 @@
 
             while(!Win && !Lost)
             {
-                TimeElapsed += std::chrono::duration_cast<std::chrono::seconds>
-                        (end-start).count();
-                //if(TimeElapsed%KReloadBullet == 0)
-                //{
+                auto Time1 = Time::now();
+                if(TimeElapsedMS >= ms(10000))
+                {
+                    TimeElapsed = fsec(0);
+                    TimeElapsedMS = ms(0);
                     if(Bullet < KMyBullet)
                         ++Bullet;
-                //}
+                }
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
-                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
                 RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
                 //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
-                end = std::chrono::system_clock::now();
+                auto Time2 = Time::now();
+                if (Bullet < KMyBullet) TimeElapsed += Time2 - Time1;
+                TimeElapsedMS += chrono::duration_cast<ms>(TimeElapsed);
             }
             if(Who == 1) MultScore += KMultScoreByInvader;
             else if (Who == 2) MultScore += KMultScoreByBoss;
