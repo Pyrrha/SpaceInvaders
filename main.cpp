@@ -61,7 +61,8 @@
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                        unsigned End, unsigned Beg, ms TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
-                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore, vector <pair<unsigned, unsigned>> Shield)
+                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore, vector <pair<unsigned, unsigned>> Shield,
+                        unsigned LifesMax, unsigned BulletMax)
     {
 
         //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
@@ -81,7 +82,7 @@
         }
         else
         {
-            if(NbLives >= (KMyLives/2)+1) ColBord = KGreen;
+            if(NbLives >= (LifesMax/2)+1) ColBord = KGreen;
             else if(NbLives > 1) ColBord = KYellow;
             else ColBord = KRed;
         }
@@ -90,14 +91,14 @@
         cout << "NIVEAU " << Level << "    Score : " << Score << "    Multiplicateur de score : " << MultScore << endl;
         //On affiche les points de vie restant
         cout << Couleur(KReset) << "Vie : ";
-        for(unsigned i(0); i < KMyLives; ++i)
+        for(unsigned i(0); i < LifesMax; ++i)
         {
             if(NbLives > i) cout << Couleur(KRed) << " ♥";
             else cout << Couleur(KBlack) << " ♥";
         }
         //On affiche les munitions actuel
         cout << "   " << Couleur(KReset) << "Munitions : ";
-        for(unsigned i(0); i < KMyBullet; ++i)
+        for(unsigned i(0); i < BulletMax; ++i)
         {
             if(Bullet > i) cout << Couleur(KGreen) << " |";
             else cout << Couleur(KRed) << " |";
@@ -918,7 +919,28 @@
 
     }
 
+    void BonusChoise(unsigned & LivesMax,unsigned & BulletMax)
+    {
+        char Choix;
+        ClearScreen();
+        cout << "z = VIE ET s = UNE BALLE" << endl;
+        cin >> Choix;
+        cout << Choix;
+        switch(Choix)
+        {
+            case 'z' :
+                    ++LivesMax;
+                break;
+            case 's' :
+                    ++BulletMax;
+                break;
+            default :
+                BonusChoise(LivesMax, BulletMax);
+                break;
+        }
 
+
+    }
     void SpaceInvaders ()
     {
 
@@ -943,8 +965,11 @@
         bool ToShoot = false;
         unsigned NbLives = KMyLives;
         unsigned Bullet = KMyBullet;
+        unsigned LivesMax = KMyLives;
+        unsigned BulletMax = KMyBullet;
         ms TimeElapsedMS;
         fsec TimeElapsed;
+
         //varBoss
         pair <unsigned, unsigned>PosShoot = make_pair(0,0);
         bool IncomingBossAttack = false;
@@ -966,10 +991,10 @@
         Konami.resize(10);
 
 
-        unsigned Level = 1;
+        unsigned Level = 10;
         unsigned Ratio;
         unsigned Who;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
 
 
         while(Level != 51)
@@ -1045,14 +1070,14 @@
                 {
                     TimeElapsed = fsec(0);
                     TimeElapsedMS = ms(0);
-                    if(Bullet < KMyBullet)
+                    if(Bullet < BulletMax)
                         ++Bullet;
                 }
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
-                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
                 RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
                 //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
@@ -1061,7 +1086,10 @@
                 TimeElapsedMS += chrono::duration_cast<ms>(TimeElapsed);
             }
             if(Who == 1) MultScore += KMultScoreByInvader;
-            else if (Who == 2) MultScore += KMultScoreByBoss;
+            else if (Who == 2) {
+                BonusChoise(LivesMax, BulletMax);
+                MultScore += KMultScoreByBoss;
+            }
             else if (Who == 3) MultScore += KMultScoreByUltraBoss;
             if(Lost)
                 DisplayScore(Win, Lost);
