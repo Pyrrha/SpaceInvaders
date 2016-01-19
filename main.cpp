@@ -1072,6 +1072,7 @@
                     TimeElapsedMS = ms(0);
                     if(Bullet < BulletMax)
                         ++Bullet;
+                        JoueLeSon(1);
                 }
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
