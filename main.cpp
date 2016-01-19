@@ -14,7 +14,7 @@
  * \brief Variables de pré-réglage
  */
 //#define DEBUG
-//#define SOUND
+#define SOUND
 
 
 #include <termios.h> //FLAG
@@ -127,7 +127,7 @@
         //On place le haut  de la grille
         cout << Couleur(ColBord) << endl;
         cout << setw(2) << "╔";
-        for(unsigned i(1); i < (Space.size()*2)+1/*(Size*2)+1*/; ++i)
+        for(unsigned i(1); i < (Space[0].size()*2)+1/*(Size*2)+1*/; ++i)
             cout << setw(2) << "═";
         cout << setw(2) << "╗" << endl;
 
@@ -135,7 +135,7 @@
         for(unsigned i(0); i < Space.size(); ++i)
         {
             cout << setw(2)<< Couleur(ColBord) << "║";
-            for(unsigned j(0); j < Space.size(); ++j)
+            for(unsigned j(0); j < Space[0].size(); ++j)
             {
 
                 if(IncomingAttack && i == PosShoot.second && j == PosShoot.first)
@@ -181,46 +181,46 @@
         }
         //Puis on affiche le bas du cadre
         cout << setw(2) << Couleur(ColBord) << "╚";
-        for(unsigned i(1); i < (Space.size()*2)+1/*(Size*2)+1*/; ++i)
+        for(unsigned i(1); i < (Space[0].size()*2)+1/*(Size*2)+1*/; ++i)
             cout << setw(2) << "═";
         cout << setw(2) << "╝" << endl;
 
 
     }
 
-    void InitUltraBossSpace(CVString & Space, unsigned Size)
+    void InitUltraBossSpace(CVString & Space, unsigned Line, unsigned Column)
     {
         Space.resize(0);
-        Space.resize(Size);
+        Space.resize(Line);
         for(unsigned i(0); i < Space.size(); ++i)
         {
             Space[i].resize(0);
-            Space[i].resize(Size);
+            Space[i].resize(Column);
         }
         for(unsigned i(0); i < KUltraBossSize; ++i)
             Space[0][i] = KInsideUltraBoss;
         for(unsigned i(0); i < KMySize; ++i)
-            Space[Size-1][((Size-1)/2)+i] = KInsideMe;
+            Space[Line-1][((Column-1)/2)+i] = KInsideMe;
 
     }
 
 
     //Fonction pour initié la grille en mode "Boss"
-    void InitBossSpace(CVString & Space, unsigned Size)
+    void InitBossSpace(CVString & Space, unsigned Line, unsigned Column)
     {
 
 
         Space.resize(0);
-        Space.resize(Size);
+        Space.resize(Line);
         for(unsigned i(0); i < Space.size(); ++i)
         {
             Space[i].resize(0);
-            Space[i].resize(Size);
+            Space[i].resize(Column);
         }
         for(unsigned i(0); i < KBossSize; ++i)
             Space[0][i] = KInsideBoss;
         for(unsigned i(0); i < KMySize; ++i)
-            Space[Size-1][((Size-1)/2)+i] = KInsideMe;
+            Space[Line-1][((Column-1)/2)+i] = KInsideMe;
 
 
 
@@ -228,19 +228,19 @@
     }
 
     //Fonction pour inité la grille en mode standard
-    void InitSpace (CVString & Space, unsigned Size)
+    void InitSpace (CVString & Space, unsigned Line, unsigned Column)
     {
-
-        Space.resize(Size);
+        Space.resize(0);
+        Space.resize(Line);
         for(unsigned i(0); i < Space.size(); ++i)
         {
             Space[i].resize(0);
-            Space[i].resize(Size);
+            Space[i].resize(Column);
         }
         for(unsigned i(0); i < KInvadersSize; ++i)
             Space[0][i] = KInsideInvader;
         for(unsigned i(0); i < KMySize; ++i)
-            Space[Size-1][((Size-1)/2)+i] = KInsideMe;
+            Space[Line-1][((Column-1)/2)+i] = KInsideMe;
 
     }
 
@@ -307,7 +307,7 @@
     void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned & Beg, unsigned & End)
     {
         bool FirstFind = false;
-        for(unsigned j(0); j < Space.size(); ++j)
+        for(unsigned j(0); j < Space[0].size(); ++j)
         {
             if(Space[CurrentLine][j] == KInsideInvader || Space[CurrentLine][j] == KInsideBoss)
             {
@@ -402,7 +402,7 @@
                         if(NbLives == 0)
                         {
                             Remove(Space, i+1, j);
-                            if (!WhoExist(Space, Space.size()-1, KInsideMe)) Lost = true;
+                            if (!WhoExist(Space, Space[0].size()-1, KInsideMe)) Lost = true;
                         }
                     }
                     else
@@ -472,7 +472,7 @@
 
             }
 
-            if((Space[CurrentLine][Space.size()-1] == Invader && Increment == 1) || (Space[CurrentLine][0] == Invader && Increment == -1))
+            if((Space[CurrentLine][Space[0].size()-1] == Invader && Increment == 1) || (Space[CurrentLine][0] == Invader && Increment == -1))
             {
                 DownShift(Space, CurrentLine, Lost, Win);
                 ++CurrentLine;
@@ -487,7 +487,7 @@
                         swap(Space[CurrentLine][j], Space[CurrentLine][j-1]);
                     }
                 else
-                    for(unsigned j (End-1); j < Space.size() -1; ++j)
+                    for(unsigned j (End-1); j < Space[0].size() -1; ++j)
                         swap(Space[CurrentLine][j], Space[CurrentLine][j+1]);
                 Beg += Increment;
                 End += Increment;
@@ -503,7 +503,7 @@
                 if(rand()%5 == 1)
                 {
                     BossShoot = true;
-                    PosShoot.first = rand()%(Space.size()-1);
+                    PosShoot.first = rand()%(Space[0].size()-1);
                     PosShoot.second = CurrentLine - 1;
                     IncomingBossAttack = true;
                 }
@@ -549,7 +549,7 @@
     }
 
     //Fonction qui gére le joueur
-    void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char> & KonamiTab, bool & IsKonami)
+    void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char> & KonamiTab, bool & IsKonami, unsigned Time)
     {
         // Lit la structure "termios" de l'entrée standard
         struct termios tios;
@@ -563,7 +563,7 @@
         // Passe en mode de saisie non canonique
         // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
         tios.c_lflag &= ~(ICANON|ECHO);
-        tios.c_cc[VTIME] = 3;
+        tios.c_cc[VTIME] = Time;
         tios.c_cc[VMIN] = 0;
         tcsetattr(STDIN_FILENO, TCSANOW, &tios);
         // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
@@ -595,7 +595,7 @@
 
            }
             else if (c == KRight) {
-               if (Pos < Space.size() - 1) {
+               if (Pos < Space[0].size() - 1) {
                    swap(Space[Space.size() - 1][Pos], Space[Space.size() - 1][Pos + 1]);
                    Pos += 1;
                }
@@ -864,14 +864,16 @@
         CVString Space;
         float Score = 0.0;
         float MultScore = 1.0;
-        unsigned Size = 21;
-        InitSpace(Space, Size);
+        unsigned Line = 21;
+        unsigned Column = 10;
+        InitSpace(Space, Line, Column);
+        unsigned Time = 6;
         int Increment = 1;
         unsigned CurrentLine = 0;
         unsigned HowMany = 0;
         unsigned Beg = KInvadersSize;
         unsigned End = 0;
-        unsigned Pos = ((Space.size()-1)/2);
+        unsigned Pos = ((Space[0].size()-1)/2);
         bool Win = false;
         bool Lost = false;
         bool ToShoot = false;
@@ -912,15 +914,18 @@
         {
             //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
             Bullet = KMyBullet;
+            if(Level%5 == 0) Line -= 1;
+            if(Level%4 == 0) Column += 1;
+            if(Level%10 == 0) Time -= 1;
             if(Level%5 == 0)
             {
-                InitBossSpace(Space, Size);
+                InitBossSpace(Space, Line, Column);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
                 Beg = KBossSize;
                 End = 0;
-                Pos = ((Space.size()-1)/2);
+                Pos = ((Space[0].size()-1)/2);
                 Win = false;
                 Lost = false;
                 ToShoot = false;
@@ -932,18 +937,18 @@
             }
             else if(Level%16 == 0)
             {
-                InitUltraBossSpace(Space, Size);
+                InitUltraBossSpace(Space, Line, Column);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
                 Beg = KUltraBossSize;
                 End = 0;
-                Pos = ((Space.size()-1)/2);
+                Pos = ((Space[0].size()-1)/2);
                 Win = false;
                 Lost = false;
                 ToShoot = false;
                 PosUltraShoot.first = 0;
-                PosUltraShoot.second = Space.size()-1;
+                PosUltraShoot.second = Space[0].size()-1;
                 HowMany = 0;
                 UltraBossLife = KUltraBossLife;
                 Ratio = KRatioMeUltraBoss;
@@ -952,13 +957,13 @@
             }
             else
             {
-               InitSpace(Space, Size);
+               InitSpace(Space, Line, Column);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
                 Beg = KInvadersSize;
                 End = 0;
-                Pos = ((Space.size()-1)/2);
+                Pos = ((Space[0].size()-1)/2);
                 Win = false;
                 Lost = false;
                 ToShoot = false;
@@ -976,7 +981,7 @@
                     if(Bullet < KMyBullet)
                         ++Bullet;
                 //}
-                ManageMe(Space, Pos, Bullet, Konami, IsKonami);
+                ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
