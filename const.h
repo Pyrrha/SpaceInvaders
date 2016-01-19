@@ -21,6 +21,10 @@ const string KYellow   ("33");
 const string KBlue    ("34");
 const string KMAgenta ("35");
 const string KCyan    ("36");
+const string KBackgroundGreen    ("42");
+const string KBackgroundYellow    ("43");
+const string KBackgroundRed    ("41");
+
 
 // Constantes Deplacement
 
@@ -61,6 +65,9 @@ const unsigned KUltraBossLife        = 4;
 const string KUltraBossColor         = KMAgenta;
 const string KUltraBossSpecialColor  = KYellow;
 
+//Constantes liée aux boucliers
+
+const char KInsideShield            = '=';
 
 // Constantes liées au joueur
 

@@ -61,7 +61,7 @@
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                        unsigned End, unsigned Beg, unsigned TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
-                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore)
+                       const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore, vector <pair<unsigned, unsigned>> Shield)
     {
 
         //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
@@ -85,6 +85,8 @@
             else if(NbLives > 1) ColBord = KYellow;
             else ColBord = KRed;
         }
+
+
         cout << "NIVEAU " << Level << "    Score : " << Score << "    Multiplicateur de score : " << MultScore << endl;
         //On affiche les points de vie restant
         cout << Couleur(KReset) << "Vie : ";
@@ -134,10 +136,11 @@
         //Et on affiche la grille (En fonction de si le Konami code est activé ou pas) (en placant les colonnes de gauche et de droite)
         for(unsigned i(0); i < Space.size(); ++i)
         {
+            cout << Couleur(KReset);
             cout << setw(2)<< Couleur(ColBord) << "║";
             for(unsigned j(0); j < Space[0].size(); ++j)
             {
-
+                cout << Couleur(KReset);
                 if(IncomingAttack && i == PosShoot.second && j == PosShoot.first)
                 {
                     cout << Couleur(KCyan) << setw(2) << 'X';
@@ -155,7 +158,7 @@
                     else if (Space[i][j] == KUltraBossWeapon) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
                     else if (Space[i][j] == KUltraBossSpecialWeapon) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
                     else if (Space[i][j] == KBossSpecialWeapon) cout << Couleur(KonamiColor[rand()%2]) << setw(2) << KBossSpecialWeapon; //char(rand()%(33-126)+33);
-
+                    else if (Space[i][j] == KInsideShield) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
                     else cout << Couleur(KReset) << setw(2) << KEmpty;
                 }
                 else
@@ -170,12 +173,24 @@
                     else if (Space[i][j] == KUltraBossWeapon) cout << Couleur(KUltraBossColor) << setw(2) << KUltraBossWeapon;
                     else if (Space[i][j] == KUltraBossSpecialWeapon) cout << Couleur(KUltraBossSpecialColor) << setw(2) << KUltraBossSpecialWeapon;
                     else if (Space[i][j] == KBossSpecialWeapon) cout << Couleur(KBossSpecialColor) << setw(2) << KBossSpecialWeapon;
-
+                    else if (Space[i][j] == KInsideShield)
+                    {
+                        for (unsigned z(0); z < Shield.size(); ++z)
+                            if (Shield[z].first == j)
+                            {
+                                if (Shield[z].second == 3) cout << Couleur(KBackgroundGreen) << setw(2) << KEmpty;
+                                else if (Shield[z].second == 2) cout << Couleur(KBackgroundYellow) << setw(2)<< KEmpty;
+                                else if (Shield[z].second == 1) cout << Couleur(KBackgroundRed) << setw(2)<< KEmpty;
+                                else cout << Couleur(KReset) << setw(2) << KEmpty;
+                                break;
+                            }
+                    }
                     else cout << Couleur(KReset) << setw(2) << KEmpty;
                 }
 
 
             }
+            cout << Couleur (KReset);
             cout << Couleur(ColBord)<< setw(2) << "║";
             cout << endl;
         }
@@ -201,6 +216,11 @@
             Space[0][i] = KInsideUltraBoss;
         for(unsigned i(0); i < KMySize; ++i)
             Space[Line-1][((Column-1)/2)+i] = KInsideMe;
+        Space[Space.size()-3][0] = KInsideShield;
+        Space[Space.size()-3][((Column-1)/2)+((Column-1)/2)/2] = KInsideShield;
+        Space[Space.size()-3][(Column-1)/2] = KInsideShield;
+        Space[Space.size()-3][((Column-1)/2)/2] = KInsideShield;
+        Space[Space.size()-3][Column -1] = KInsideShield;
 
     }
 
@@ -221,9 +241,11 @@
             Space[0][i] = KInsideBoss;
         for(unsigned i(0); i < KMySize; ++i)
             Space[Line-1][((Column-1)/2)+i] = KInsideMe;
-
-
-
+        Space[Space.size()-3][0] = KInsideShield;
+        Space[Space.size()-3][((Column-1)/2)+((Column-1)/2)/2] = KInsideShield;
+        Space[Space.size()-3][(Column-1)/2] = KInsideShield;
+        Space[Space.size()-3][((Column-1)/2)/2] = KInsideShield;
+        Space[Space.size()-3][Column -1] = KInsideShield;
 
     }
 
@@ -242,6 +264,11 @@
         for(unsigned i(0); i < KMySize; ++i)
             Space[Line-1][((Column-1)/2)+i] = KInsideMe;
 
+        Space[Space.size()-3][0] = KInsideShield;
+        Space[Space.size()-3][((Column-1)/2)+((Column-1)/2)/2] = KInsideShield;
+        Space[Space.size()-3][(Column-1)/2] = KInsideShield;
+        Space[Space.size()-3][((Column-1)/2)/2] = KInsideShield;
+        Space[Space.size()-3][Column -1] = KInsideShield;
     }
 
     void Remove (CVString & Space, unsigned Line, unsigned Column);
@@ -323,7 +350,7 @@
     }
 
     //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
-    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore)
+    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore, vector <pair<unsigned, unsigned>> & Shield)
     {
 
 
@@ -355,6 +382,17 @@
                         if(BossLife == 0)
                             Win = true;
 
+                    }
+                    else if (Space[i-1][j] == KInsideShield)
+                    {
+                        Space[i][j] = KEmpty;
+                        for(unsigned z(0); z < Shield.size(); ++z)
+                        {
+                            if (Shield[z].first == j) --Shield[z].second;
+                            if (Shield[z].first == j && Shield[z].second == 0)
+                                Space[i-1][j] = KEmpty;
+
+                        }
                     }
                     else if (Space[i-1][j] == KInsideUltraBoss)
                     {
@@ -403,6 +441,16 @@
                         {
                             Remove(Space, i+1, j);
                             if (!WhoExist(Space, Space[0].size()-1, KInsideMe)) Lost = true;
+                        }
+                    }
+                    else if (Space[i+1][j] == KInsideShield)
+                    {
+                        Space[i][j] = KEmpty;
+                        for(unsigned z(0); z < Shield.size(); ++z)
+                        {
+                            if (Shield[z].first == j) --Shield[z].second;
+                            if (Shield[z].first == j && Shield[z].second == 0)
+                                Space[i+1][j] = KEmpty;
                         }
                     }
                     else
@@ -857,16 +905,32 @@
                 Menu();
         }
     }
+    inline
+    void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
+    {
+        Shield.resize(0);
+        Shield.push_back (make_pair(0, 3));
+        Shield.push_back (make_pair((Column-1)/2+((Column-1)/2)/2, 3));
+        Shield.push_back (make_pair((Column-1)/2, 3));
+        Shield.push_back (make_pair(((Column-1)/2)/2, 3));
+        Shield.push_back (make_pair(Column -1, 3));
+
+
+    }
+
+
     void SpaceInvaders ()
     {
 
         //Les valeurs général initialisé
         CVString Space;
+        vector <pair<unsigned, unsigned>> Shield;
         float Score = 0.0;
         float MultScore = 1.0;
         unsigned Line = 21;
         unsigned Column = 10;
         InitSpace(Space, Line, Column);
+        InitShield(Shield, Column);
         unsigned Time = 6;
         int Increment = 1;
         unsigned CurrentLine = 0;
@@ -906,7 +970,7 @@
         unsigned Level = 1;
         unsigned Ratio;
         unsigned Who;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore);
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
         start = std::chrono::system_clock::now();
 
 
@@ -920,6 +984,7 @@
             if(Level%5 == 0)
             {
                 InitBossSpace(Space, Line, Column);
+                InitShield(Shield, Column);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
@@ -938,6 +1003,7 @@
             else if(Level%16 == 0)
             {
                 InitUltraBossSpace(Space, Line, Column);
+                InitShield(Shield, Column);
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
@@ -958,6 +1024,8 @@
             else
             {
                InitSpace(Space, Line, Column);
+                InitShield(Shield, Column);
+
                 Increment = 1;
                 CurrentLine = 0;
                 HowMany = 0;
@@ -985,8 +1053,8 @@
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
-                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore);
-                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield);
+                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
                 //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
                 end = std::chrono::system_clock::now();
