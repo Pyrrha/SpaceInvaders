@@ -1016,10 +1016,10 @@
 
         //Affiche la structure du mnenu ainsi que le contenu
         cout << Espaces() << "╔";
-        for(unsigned i (1); i < 20; ++i)
+        for(unsigned i (1); i < 17; ++i)
             cout << "═";
         cout << " BONUS TIME ";
-        for(unsigned i (0); i < 19; ++i)
+        for(unsigned i (0); i < 16; ++i)
             cout << "═";
         cout << "╗" << endl;
 
@@ -1190,11 +1190,12 @@
                 //{
                     TimeElapsed = fsec(0);
                     TimeElapsedMS = ms(0);
-                    if(Bullet < BulletMax)
+                    if(Bullet < BulletMax) {
                         ++Bullet;
                         #ifdef SOUND
                         JoueLeSon(1);
                         #endif
+                    }
                 //}
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
