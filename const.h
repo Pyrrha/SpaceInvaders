@@ -32,6 +32,10 @@ using namespace std;
 
 #endif //SPACE_INVADERS_CONST_H
 
+//Const PowerUps
+const vector <char> PowerUps = {'L', 'L', 'L', 'L', 'S', 'S', 'S', 'S', 'S', 'E', 'E', 'E', 'F', 'J'};
+
+
 // Constantes couleurs
 
 /*!

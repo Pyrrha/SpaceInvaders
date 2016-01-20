@@ -58,6 +58,13 @@
 #endif
     }
 
+    bool IsPowerUps(char Case)
+    {
+        for(unsigned i(0); i < PowerUps.size(); ++i)
+            if(PowerUps[i] == Case) return true;
+        return false;
+    }
+
     //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                        unsigned End, unsigned Beg, ms TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
@@ -174,6 +181,7 @@
                     else if (Space[i][j] == KUltraBossWeapon) cout << Couleur(KUltraBossColor) << setw(2) << KUltraBossWeapon;
                     else if (Space[i][j] == KUltraBossSpecialWeapon) cout << Couleur(KUltraBossSpecialColor) << setw(2) << KUltraBossSpecialWeapon;
                     else if (Space[i][j] == KBossSpecialWeapon) cout << Couleur(KBossSpecialColor) << setw(2) << KBossSpecialWeapon;
+                    else if (IsPowerUps(Space[i][j])) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
                     else if (Space[i][j] == KInsideShield)
                     {
                         for (unsigned z(0); z < Shield.size(); ++z)
@@ -350,11 +358,36 @@
         }
     }
 
+
+
+
+    void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultScore, unsigned LivesMax, unsigned & Jeton)
+    {
+        if (PowerUp == 'L') ++NbLives;
+        else if (PowerUp == 'S') Score += 1004.2;
+        else if (PowerUp == 'E') MultScore += 0.5;
+        else if (PowerUp == 'F') NbLives = LivesMax;
+        else if (PowerUp == 'J') ++Jeton;
+
+    }
+
     //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
-    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore, vector <pair<unsigned, unsigned>> & Shield)
+    void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore,
+                         vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton)
     {
 
+        //BouclePowerUps
+        for (unsigned j(0); j < Space[0].size(); ++j)
+        {
+            if (IsPowerUps(Space[0][j]) && j > 0) {
+                Space[0][j] = PowerUps[rand() % PowerUps.size() - 1];
+                swap(Space[0][j], Space[0][j - 1]);
 
+            }
+            else if (IsPowerUps(Space[0][j]) && j == 0) {
+                Space[0][j] = KEmpty;
+            }
+        }
         //On parcous de haut en bas pour faire remonté les missile allié
         for(unsigned i (0); i < Space.size(); ++i)
             for(unsigned j(0); j < Space[i].size(); ++j)
@@ -369,7 +402,7 @@
                         Score += KScoreByWeapon*MultScore;
                         continue;
                     }
-                    if(Space[i-1][j] == KInsideInvader)
+                    else if(Space[i-1][j] == KInsideInvader)
                     {
                         Remove(Space, i-1, j);
                         Score += KScoreByInvader*MultScore;
@@ -402,6 +435,13 @@
                         --UltraBossLife;
                         if(UltraBossLife == 0)
                             Win = true;
+                    }
+                    else if (IsPowerUps(Space[i-1][j]))
+                    {
+                        Space[i][j] = KEmpty;
+                        AddPowerUps(Space[i-1][j], NbLives, Score, MultScore, LivesMax, Jeton);
+                        Space[i-1][j] = KEmpty;
+
                     }
                     else
                         swap(Space[i][j],Space[i-1][j]);
@@ -499,10 +539,11 @@
                              bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot,
                              pair <unsigned, unsigned> & PosUltraShoot, unsigned HowMany, const unsigned & Level)
         {
-        //Si on est en bout de ligne on descent et on va dans l'autre sens !
             char Invader;
             char Weapon;
-
+            //On gère les powersups dans le menage invaders
+            if(CurrentLine > 0 && rand()%5 == 1) Space[0][Space[0].size()-1] = PowerUps[rand()%PowerUps.size()-1];
+            //On vérifie quel type d'envahisseur on menage
             if (Who == 1)
             {
                 Invader = KInsideInvader;
@@ -523,6 +564,7 @@
                 Weapon = KUltraBossWeapon;
 
             }
+            //Si on est en bout de ligne on descent et on va dans l'autre sens !
 
             if((Space[CurrentLine][Space[0].size()-1] == Invader && Increment == 1) || (Space[CurrentLine][0] == Invader && Increment == -1))
             {
@@ -932,13 +974,65 @@
 
     }
 
-    void BonusChoise(unsigned & LivesMax,unsigned & BulletMax)
+    void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
     {
-        char Choix;
+
+
+        const vector <char> Lots = {'V', 'V', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'V', 'V', 'V', 'B', 'B', 'B', 'B', 'B', 'B', 'A', 'A'};
+        const vector <unsigned> NbLots = {1,2,0,0,0,0,0,0,0,0,0,1,2,1,3,1,1,2,2,1,3,1,2};
+        char Wait;
+        unsigned Bonus = rand()%Lots.size()-1;
         ClearScreen();
-        cout << "z = VIE ET s = UNE BALLE" << endl;
+        if(Lots[Bonus] == 'V') {
+            cout << "Vous avez remporté " << NbLots[Bonus] << " vie(s) max.";
+            LivesMax += NbLots[Bonus];
+        }
+        else if(Lots[Bonus] == 'B') {
+            cout << "Vous avez remporté " << NbLots[Bonus] << " balle(s) max.";
+            BulletMax += NbLots[Bonus];
+
+        }
+
+        else if(Lots[Bonus] == 'A') {
+            cout << "Vous avez remporté " << NbLots[Bonus] << " vie(s) max et balle(s) max !!!";
+            LivesMax += NbLots[Bonus];
+            BulletMax += NbLots[Bonus];
+
+        }
+        else if(Lots[Bonus] == 'X') {
+            cout << "Vous n'avez rien remporté, désolé.";
+        }
+
+        cout << endl << "(appuiez sur une touche pour reprendre)";
+        Wait = Read ();
+
+    }
+
+    void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
+    {
+        ClearScreen();
+
+        vector<string> Options = {" v : Vie", " b : Balle", " j : Jeton"};
+
+        //Affiche la structure du mnenu ainsi que le contenu
+        cout << Espaces() << "╔";
+        for(unsigned i (1); i < 20; ++i)
+            cout << "═";
+        cout << " BONUS TIME ";
+        for(unsigned i (0); i < 19; ++i)
+            cout << "═";
+        cout << "╗" << endl;
+
+        Separateur();
+        OptionsMenu(Options);
+
+        cout << Espaces() << "╚";
+        for(unsigned i (1); i < 45; ++i)
+            cout  << "═";
+        cout << "╝" << endl;
+
+        char Choix;
         cin >> Choix;
-        cout << Choix;
         switch(Choix)
         {
             case 'z' :
@@ -947,8 +1041,15 @@
             case 's' :
                     ++BulletMax;
                 break;
+            case 'j' :
+                    if(Jeton > 0) {
+                        RouletteGame(LivesMax, BulletMax);
+                        --Jeton;
+                    }
+                    else BonusChoise(LivesMax, BulletMax, Jeton);
+                break;
             default :
-                BonusChoise(LivesMax, BulletMax);
+                BonusChoise(LivesMax, BulletMax, Jeton);
                 break;
         }
 
@@ -962,6 +1063,7 @@
         vector <pair<unsigned, unsigned>> Shield;
         float Score = 0.0;
         float MultScore = 1.0;
+        unsigned Jeton = 1;
         unsigned Line = 21;
         unsigned Column = 10;
         InitSpace(Space, Line, Column);
@@ -982,6 +1084,7 @@
         unsigned BulletMax = KMyBullet;
         ms TimeElapsedMS;
         fsec TimeElapsed;
+
 
         //varBoss
         pair <unsigned, unsigned>PosShoot = make_pair(0,0);
@@ -1004,7 +1107,7 @@
         Konami.resize(10);
 
 
-        unsigned Level = 1;
+        unsigned Level = 10;
         unsigned Ratio;
         unsigned Who;
         DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
@@ -1083,8 +1186,8 @@
             while(!Win && !Lost)
             {
                 auto Time1 = Time::now();
-                if(TimeElapsedMS >= ms(10000))
-                {
+                //if(TimeElapsedMS >= ms(10000))
+                //{
                     TimeElapsed = fsec(0);
                     TimeElapsedMS = ms(0);
                     if(Bullet < BulletMax)
@@ -1092,13 +1195,13 @@
                         #ifdef SOUND
                         JoueLeSon(1);
                         #endif
-                }
+                //}
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
                 DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
-                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield);
+                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield, LivesMax, Jeton);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
                 //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
                 auto Time2 = Time::now();
@@ -1107,7 +1210,7 @@
             }
             if(Who == 1) MultScore += KMultScoreByInvader;
             else if (Who == 2 && !Lost && Level < 50) {
-                BonusChoise(LivesMax, BulletMax);
+                BonusChoise(LivesMax, BulletMax, Jeton);
                 MultScore += KMultScoreByBoss;
             }
             else if (Who == 3) MultScore += KMultScoreByUltraBoss;
