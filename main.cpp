@@ -83,16 +83,16 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
 #endif // define
 
     //On adapte la couleur de la bordure (soit avec le KonamiCode activé soit en fonction de la vie)
-    if (IsKonami)
+    /*if (IsKonami)
     {
         ColBord = KonamiColor[rand()%5];
     }
     else
-    {
+    {*/
         if(NbLives >= (LifesMax/2)+1) ColBord = KGreen;
         else if(NbLives > 1) ColBord = KYellow;
         else ColBord = KRed;
-    }
+    //}
 
 
     cout << "NIVEAU " << Level << "    Score : " << Score << "    Multiplicateur de score : " << MultScore << endl;
@@ -162,7 +162,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                 cout << Couleur(KCyan) << setw(2) << 'X';
                 continue;
             }
-            if(IsKonami)
+            /*if(IsKonami)
             {
                 if (Space[i][j] == KInsideMe) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
                 else if (Space[i][j] == KInsideInvader) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
@@ -178,7 +178,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                 else cout << Couleur(KReset) << setw(2) << KEmpty;
             }
             else
-            {
+            {*/
                 if (Space[i][j] == KInsideMe) cout << Couleur(KMyColor) << setw(2) << KInsideMe;
                 else if (Space[i][j] == KInsideInvader) cout << Couleur(KInvadersColor) << setw(2) << KInsideInvader;
                 else if (Space[i][j] == KInsideBoss) cout << Couleur(KBossColor) << setw(2) << KInsideBoss;
@@ -203,7 +203,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                         }
                 }
                 else cout << Couleur(KReset) << setw(2) << KEmpty;
-            }
+            //}
 
 
         }
@@ -1200,7 +1200,7 @@ void SpaceInvaders ()
             {
                 TimeElapsed = fsec(0);
                 TimeElapsedMS = ms(0);
-                if(Bullet < BulletMax)
+                if(Bullet < BulletMax || IsKonami)
                 {
                     ++Bullet;
 #ifdef SOUND
