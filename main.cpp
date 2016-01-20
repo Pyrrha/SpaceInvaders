@@ -667,53 +667,57 @@
     }
     void Menu ();
     void SpaceInvaders ();
+    char Read ();
+    void BonusChoise();
 
     //Menuaprès avoir fini !
-    void DisplayScore(const bool & Win, const bool & Lost)
+    void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsigned & Bullet, float & Score, float & MultScore)
     {
         char ChoixMenu;
-        cout << "Vous venez de terminé la partie et vous avez ";
+        cout << "You ";
         if (Win)
         {
-            cout << "gagné ! Félicitation :)" << endl;
+            cout << "win ! :)" << endl;
+            cout << endl;
+            Score = Score + (Bullet*100*MultScore) + (NbLives*1000*MultScore);
+            cout << "Score : " << Score << endl;
         }
+
         else if (Lost)
         {
-            cout << "perdu ! Dommage, vous ferez mieux la prochaine fois ! :)" << endl;
-#ifdef SOUND
+            cout << "lost ! :(" << endl;
+            #ifdef SOUND
             JoueLeSon(3);
-#endif
+            #endif
+            Score = Score + (Bullet*100*MultScore) + (NbLives*1000*MultScore);
+            cout << "Score : " << Score << endl;
         }
         else
+            cerr << "Something went wrong..." << endl;
+
+        cout << endl;
+        cout << endl;
+
+        cout << "r : Replay" << endl;
+        cout << "m : Menu" << endl;
+        cout << "e : Exit" << endl;
+
+        ChoixMenu = Read();
+        cout << endl;
+
+        switch (ChoixMenu)
         {
-            cerr << "euh.. Il semble y avoir un probleme..." << endl;
+            case 'r' :
+                SpaceInvaders();
+                break;
+            case 'm' :
+                Menu();
+                break;
+            default :
+                ClearScreen();
+                DisplayScore(Win, Lost, NbLives, Bullet, Score, MultScore);
+                break;
         }
-
-        cout << endl;
-        cout << endl;
-
-        do
-        {
-            cout << "r : Replay" << endl;
-            cout << "m : Menu" << endl;
-            cout << "e : Exit" << endl;
-            cout << endl;
-            cout << "> > > ";
-            cin >> ChoixMenu;
-            cout << endl;
-
-            switch (ChoixMenu)
-            {
-                case 'r' :
-                    SpaceInvaders();
-                    break;
-                case 'm' :
-                    Menu();
-                    break;
-                case 'e' :
-                    break;
-            }
-        }while ('r' != ChoixMenu && 'm' != ChoixMenu && 'e' != ChoixMenu);
 
 
     }
@@ -803,12 +807,32 @@
         for(unsigned i (1); i < 45; ++i)
             cout  << "═";
         cout << "╝" << endl;
-        cout << endl;
-
-        cout << Espaces() << " > > >  ";
     }
 
+    char Read ()
+    {
+        char Var;
+        // Lit la structure "termios" de l'entrée standard
+        struct termios tios;
+        tcgetattr(STDIN_FILENO, &tios);
 
+        //Sauve l'ancien flag "c_lflag"
+        tcflag_t old_c_lflag = tios.c_lflag;
+
+        // Passe en mode de saisie non canonique
+        // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
+        tios.c_lflag &= ~(ICANON|ECHO);
+        tios.c_cc[VTIME] = 0;
+        tios.c_cc[VMIN] = 1;
+        tcsetattr(STDIN_FILENO, TCSANOW, &tios);
+        // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
+
+        read(STDIN_FILENO, &Var, 1); // Lit un caractére sur l'entrée standard
+
+        tios.c_lflag = old_c_lflag;
+        tcsetattr(STDIN_FILENO, TCSANOW, &tios);
+        return Var;
+    }
 
     void Menu ()
     {
@@ -818,28 +842,7 @@
         MenuHeader();
         DisplayMenu();
 
-        // Lit la structure "termios" de l'entrée standard
-        struct termios tios;
-        tcgetattr(STDIN_FILENO, &tios);
-
-        //Sauve l'ancien flag "c_lflag"
-        tcflag_t old_c_lflag = tios.c_lflag;
-
-        cin >> ChoixMenu;
-        cout << endl;
-
-        // Passe en mode de saisie non canonique
-        // VMIN = 0 donc au min 0 carac et VTIME = 3 donc toute les 3/10s ça valide
-        tios.c_lflag &= ~(ICANON|ECHO);
-        tios.c_cc[VTIME] = 0;
-        tios.c_cc[VMIN] = 0;
-        tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-        // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
-
-        read(STDIN_FILENO, &ChoixMenu, 1); // Lit un caractére sur l'entrée standard
-
-        tios.c_lflag = old_c_lflag;
-        tcsetattr(STDIN_FILENO, TCSANOW, &tios);
+        ChoixMenu = Read ();
 
         char KeyLeft;
         char KeyRight;
@@ -876,8 +879,9 @@
                 cout << KRight << " : Move to the right." << endl;
                 cout << KShoot << " : Shoot." << endl;
                 cout << endl;
-                cout << "Press any case to go back";
-                cin >> ChoixMenu;
+                cout << "(Press any case to go back)";
+                cout << endl;
+                ChoixMenu = Read ();
                 Menu();
                 break;
             }
@@ -893,8 +897,9 @@
                 cout << "Alexandre CARON" << endl;
                 cout << endl;
                 cout << endl;
-                cout << "Press any case to go back";
-                cin >> ChoixMenu;
+                cout << "(Press any case to go back)";
+                cout << endl;
+                ChoixMenu = Read ();
                 Menu();
                 break;
             }
@@ -906,6 +911,7 @@
                 Menu();
         }
     }
+
     inline
     void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
     {
@@ -991,7 +997,7 @@
         Konami.resize(10);
 
 
-        unsigned Level = 10;
+        unsigned Level = 1;
         unsigned Ratio;
         unsigned Who;
         DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
@@ -1087,13 +1093,13 @@
                 TimeElapsedMS += chrono::duration_cast<ms>(TimeElapsed);
             }
             if(Who == 1) MultScore += KMultScoreByInvader;
-            else if (Who == 2) {
+            else if (Who == 2 && !Lost && Level < 50) {
                 BonusChoise(LivesMax, BulletMax);
                 MultScore += KMultScoreByBoss;
             }
             else if (Who == 3) MultScore += KMultScoreByUltraBoss;
             if(Lost)
-                DisplayScore(Win, Lost);
+                DisplayScore(Win, Lost, NbLives, Bullet, Score, MultScore);
             ++Level;
 
 
@@ -1101,10 +1107,8 @@
         Win = true;
         ClearScreen();
         cout << Couleur(KReset);
-        DisplayScore(Win, Lost);
-
+        DisplayScore(Win, Lost, NbLives, Bullet, Score, MultScore);
     }
-
 
 
 

@@ -32,6 +32,8 @@ const char KEmpty               = ' ';  // case vide de l'écran
 char KRight;  // déplacement vers la droite
 char KLeft;  // Déplacement vers la gauche
 char KShoot;  // Lancé de torpille
+const unsigned KUp = 273;
+const unsigned KDown = 274;
 
 //  Constantes liées à l'envahisseur
 
