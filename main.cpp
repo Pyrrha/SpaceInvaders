@@ -72,7 +72,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                    unsigned LifesMax, unsigned BulletMax, unsigned Jeton, char LastPowerUp)
 {
 
-    //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
+    //Merci au beau goss de Cedric qui a participé à 15% à la conception du display :)
     ClearScreen();
     string ColBord;
     vector <string> KonamiColor = {KBlue, KCyan, KRed, KGreen, KYellow, KMAgenta};
@@ -1204,7 +1204,7 @@ void SpaceInvaders ()
                 {
                     ++Bullet;
 #ifdef SOUND
-                    if(!Konami) JoueLeSon(1);
+                    if(!IsKonami) JoueLeSon(1);
 #endif
                 }
             }
