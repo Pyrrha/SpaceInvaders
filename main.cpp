@@ -69,7 +69,7 @@
     void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                        unsigned End, unsigned Beg, ms TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
                        const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore, vector <pair<unsigned, unsigned>> Shield,
-                        unsigned LifesMax, unsigned BulletMax)
+                        unsigned LifesMax, unsigned BulletMax, unsigned Jeton, char LastPowerUp)
     {
 
         //Merci au beau goss de Cedric qui a participé à 200% à la conception du display :)
@@ -96,7 +96,15 @@
 
 
         cout << "NIVEAU " << Level << "    Score : " << Score << "    Multiplicateur de score : " << MultScore << endl;
-        //On affiche les points de vie restant
+        cout << "Jeton : " << Jeton << "   Dernier Power-up : ";
+        if(LastPowerUp == 'L') cout << "Vie";
+        else if(LastPowerUp == 'S') cout << "Score";
+        else if(LastPowerUp == 'E') cout << "Multiplicateur Score";
+        else if(LastPowerUp == 'F') cout << "Full vie";
+        else if(LastPowerUp == 'J') cout << "Jeton";
+        else cout << "Aucun";
+        cout << endl;
+            //On affiche les points de vie restant
         cout << Couleur(KReset) << "Vie : ";
         for(unsigned i(0); i < LifesMax; ++i)
         {
@@ -113,7 +121,7 @@
         cout << endl;
         if (BossLife > 0)
         {
-            cout << "   " << Couleur(KReset) << "Vie Boss : ";
+            cout << Couleur(KReset) << "Vie Boss : ";
             for(unsigned i(0); i < KBossLife; ++i)
             {
                 if(BossLife > i) cout << Couleur(KYellow) << " ♥";
@@ -137,7 +145,7 @@
         //On place le haut  de la grille
         cout << Couleur(ColBord) << endl;
         cout << setw(2) << "╔";
-        for(unsigned i(1); i < (Space[0].size()*2)+1/*(Size*2)+1*/; ++i)
+        for(unsigned i(1); i < (Space[0].size()*2)+1; ++i)
             cout << setw(2) << "═";
         cout << setw(2) << "╗" << endl;
 
@@ -373,7 +381,7 @@
 
     //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
     void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore,
-                         vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton)
+                         vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton, char & LastPowerUp)
     {
 
         //BouclePowerUps
@@ -440,6 +448,7 @@
                     {
                         Space[i][j] = KEmpty;
                         AddPowerUps(Space[i-1][j], NbLives, Score, MultScore, LivesMax, Jeton);
+                        LastPowerUp = Space[i-1][j];
                         Space[i-1][j] = KEmpty;
 
                     }
@@ -1016,10 +1025,10 @@
 
         //Affiche la structure du mnenu ainsi que le contenu
         cout << Espaces() << "╔";
-        for(unsigned i (1); i < 17; ++i)
+        for(unsigned i (1); i < 20; ++i)
             cout << "═";
         cout << " BONUS TIME ";
-        for(unsigned i (0); i < 16; ++i)
+        for(unsigned i (0); i < 19; ++i)
             cout << "═";
         cout << "╗" << endl;
 
@@ -1035,10 +1044,10 @@
         cin >> Choix;
         switch(Choix)
         {
-            case 'z' :
+            case 'v' :
                     ++LivesMax;
                 break;
-            case 's' :
+            case 'b' :
                     ++BulletMax;
                 break;
             case 'j' :
@@ -1064,6 +1073,7 @@
         float Score = 0.0;
         float MultScore = 1.0;
         unsigned Jeton = 1;
+        char LastPowerUp;
         unsigned Line = 21;
         unsigned Column = 10;
         InitSpace(Space, Line, Column);
@@ -1107,13 +1117,13 @@
         Konami.resize(10);
 
 
-        unsigned Level = 10;
+        unsigned Level = 1;
         unsigned Ratio;
         unsigned Who;
-        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
 
 
-        while(Level != 51)
+        while(Level < 52)
         {
             //Recharge des munitions du mec, le pauvre, il va douiller sinon x)
             Bullet = KMyBullet;
@@ -1139,7 +1149,7 @@
                 IncomingBossAttack = false;
 
             }
-            else if(Level%50 == 0)
+            else if(Level%51 == 0)
             {
                 InitUltraBossSpace(Space, Line, Column);
                 InitShield(Shield, Column);
@@ -1186,23 +1196,22 @@
             while(!Win && !Lost)
             {
                 auto Time1 = Time::now();
-                //if(TimeElapsedMS >= ms(10000))
-                //{
+                if(TimeElapsedMS >= ms(10000))
+                {
                     TimeElapsed = fsec(0);
                     TimeElapsedMS = ms(0);
-                    if(Bullet < BulletMax) {
+                    if(Bullet < BulletMax)
                         ++Bullet;
                         #ifdef SOUND
                         JoueLeSon(1);
                         #endif
-                    }
-                //}
+                }
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
                 if(HowMany%Ratio == 0)
                     ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
-                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax);
-                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield, LivesMax, Jeton);
+                DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
+                RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield, LivesMax, Jeton, LastPowerUp);
                 DetectBegEnd(Space, CurrentLine, Beg, End);
                 //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
                 auto Time2 = Time::now();
