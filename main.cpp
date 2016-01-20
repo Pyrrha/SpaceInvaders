@@ -112,12 +112,12 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
         else cout << Couleur(KBlack) << " ♥";
     }
     //On affiche les munitions actuel
-    cout << "   " << Couleur(KReset) << "Munitions : ";
-    for(unsigned i(0); i < BulletMax; ++i)
-    {
-        if(Bullet > i) cout << Couleur(KGreen) << " |";
-        else cout << Couleur(KRed) << " |";
-    }
+    cout << "   " << Couleur(KReset) << "Munitions :";
+    if(IsKonami)
+        cout << Couleur(KCyan) << "ILLIMITEES";
+    else
+        for(unsigned i(0); i < BulletMax; ++i)
+            Bullet > i ? cout << Couleur(KGreen) << " |" : cout << Couleur(KRed) << " |";
     cout << endl;
     if (BossLife > 0)
     {
@@ -1204,7 +1204,7 @@ void SpaceInvaders ()
                 {
                     ++Bullet;
 #ifdef SOUND
-                    JoueLeSon(1);
+                    if(!Konami) JoueLeSon(1);
 #endif
                 }
             }
