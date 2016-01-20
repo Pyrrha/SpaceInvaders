@@ -69,3 +69,9 @@ sélectionner est https://github.com/GeeksdelaCave/SpaceInvaders.git. Si vous ne
 
 Sélectionnez ensuite le répertoire où le projet sera cloné. Donnez enfin un nom au répertoire du projet en lui-même, par
 défaut SpaceInvaders. Enfin, le bouton "Clone" pour valider. Le projet actuel devrait s'ouvrir sous vos yeux.
+
+### Bug connu : CLion refuse de commit/push : No change detected
+
+Il suffit alors de relancer CLion, en le fermant et le rouvrant. Le code est conservé, et vous pouvez re-tenter de commit/push vos modifications.
+
+En cas de force majeure, passez par l'éditeur direct du site de Github.
