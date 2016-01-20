@@ -19,20 +19,6 @@ using namespace std;
 
 #endif //SPACE_INVADERS_CONST_H
 
-// Constantes couleurs
-
-const string KReset   ("0");
-const string KBlack    ("30");
-const string KRed   ("31");
-const string KGreen    ("32");
-const string KYellow   ("33");
-const string KBlue    ("34");
-const string KMAgenta ("35");
-const string KCyan    ("36");
-const string KBackgroundGreen    ("42");
-const string KBackgroundYellow    ("43");
-const string KBackgroundRed    ("41");
-
 //
 // Created by Pyrrha on 15/01/2016.
 //
