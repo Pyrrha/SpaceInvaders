@@ -114,7 +114,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
     //On affiche les munitions actuel
     cout << "   " << Couleur(KReset) << "Munitions :";
     if(IsKonami)
-        cout << Couleur(KCyan) << "ILLIMITEES";
+        cout << Couleur(KCyan) << " ILLIMITEES";
     else
         for(unsigned i(0); i < BulletMax; ++i)
             Bullet > i ? cout << Couleur(KGreen) << " |" : cout << Couleur(KRed) << " |";
