@@ -1196,11 +1196,11 @@ void SpaceInvaders ()
         while(!Win && !Lost)
         {
             auto Time1 = Time::now();
-            if(TimeElapsedMS >= ms(10000))
+            if(TimeElapsedMS >= ms(10000) || IsKonami)
             {
                 TimeElapsed = fsec(0);
                 TimeElapsedMS = ms(0);
-                if(Bullet < BulletMax || IsKonami)
+                if(Bullet < BulletMax)
                 {
                     ++Bullet;
 #ifdef SOUND
