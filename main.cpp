@@ -626,9 +626,9 @@
             //ToLower(c);
            if(c == KShoot) {
                if (Bullet > 0) {
-#ifdef SOUND
-                   JoueLeSon(0);
-#endif
+                    #ifdef SOUND
+                    JoueLeSon(0);
+                    #endif
                    Shoot(Space, Space.size() - 2, Pos, KTorpedo, KInsideMe);
                    --Bullet;
                }
@@ -1078,7 +1078,9 @@
                     TimeElapsedMS = ms(0);
                     if(Bullet < BulletMax)
                         ++Bullet;
+                        #ifdef SOUND
                         JoueLeSon(1);
+                        #endif
                 }
                 ManageMe(Space, Pos, Bullet, Konami, IsKonami, Time);
                 ++HowMany;
