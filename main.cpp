@@ -437,6 +437,9 @@
                     {
                         MultScore = 1;
                         --NbLives;
+                        #ifdef SOUND
+                        JoueLeSon(4);
+                        #endif
                         Remove(Space, i, j);
                         if(NbLives == 0)
                         {
@@ -838,6 +841,10 @@
     {
         char ChoixMenu;
 
+        #ifdef SOUND
+        JoueLeSon(5);
+        #endif
+
         ClearScreen();
         MenuHeader();
         DisplayMenu();
@@ -1069,6 +1076,10 @@
                 IncomingBossAttack = false;
             }
 
+            #ifdef SOUND
+            JoueLeSon(6);
+            #endif
+
             while(!Win && !Lost)
             {
                 auto Time1 = Time::now();
@@ -1116,9 +1127,9 @@
 
 int main ()
 {
-#ifdef SOUND
+    #ifdef SOUND
     ChargeLesSons();
-#endif
+    #endif
     ClearScreen();
     MajKeybind ();
     Menu ();
@@ -1128,4 +1139,8 @@ int main ()
 
 #ifdef DEBUG
 #undef DEBUG
+#endif
+
+#ifdef SOUND
+#undef SOUND
 #endif

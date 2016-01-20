@@ -1,5 +1,5 @@
 //
-// Created by Pyrrha on 18/01/2016.
+// Created by Tristan Dietz on 18/01/2016.
 //
 
 #ifndef SPACE_INVADERS_SOUNDS_H
