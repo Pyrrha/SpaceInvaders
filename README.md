@@ -16,8 +16,9 @@ Le Groupe 2 est fier de vous compter dans ses rangs, faites-en sorte d'y rester.
 
 Les différentes étapes à coder prochainement :
 
+- Compilation sous Qt Creator, générer notre .pro, intégrer la lib SFML pour le son, tester la compatibilité sur Linux, ajouter la ligne de Casali pour la compilation sous Mac OS X -- WORK IN PROGRESS
 - Bouclier ; -- DONE
-- Items en jeu ; --WORK IN PROGRESS
+- Items en jeu ; -- WORK IN PROGRESS
 - Gestionnaire automatique de niveaux ; --DONE
 - Ecran de score. -- WORK IN PROGRESS
 - ULTRA BOSS !!! -- DONE -- BUG SEGFAULT ??
