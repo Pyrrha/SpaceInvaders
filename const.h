@@ -1,13 +1,13 @@
 /*!
- * \file const.h
+ * \file main.cpp
  *
- * \author
+ * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
  *
- * \date
+ * \date 18/01/2016
  *
- * \version
+ * \version 3.2.6
  *
- * \brief
+ * \brief c'est le lichier qui contient toutes les constant de notre pojets quui n'est d'autre qu'un space invader
  */
 
 #pragma once
@@ -111,15 +111,6 @@ char KLeft;  // Déplacement vers la gauche
  */
 char KShoot;  // Lancé de torpille
 
-/*!
- * \brief Alias ....
- */
-const unsigned KUp = 273;
-
-/*!
- * \brief Alias .......
- */
-const unsigned KDown = 274;
 
 //  Constantes liées à l'envahisseur
 
@@ -308,16 +299,19 @@ const unsigned KReloadBullet	= 15; //temps de rechargement
 //Constante liées au temps
 
 /*!
+ * \typedef std::chrono::high_resolution_clock Time
  * \brief Alias pour avoir un chronometre
  */
 typedef std::chrono::high_resolution_clock Time;
 
 /*!
+ * \typedef std::chrono::milliseconds ms
  * \brief Alias pour avoir le temps en ms.
  */
 typedef std::chrono::milliseconds ms;
 
 /*!
+ * \typedef std::chrono::duration<float> fsec
  * \brief Alias pour avoir un temps en sec.
  */
 typedef std::chrono::duration<float> fsec;
@@ -347,6 +341,7 @@ const unsigned KBegInvader = 0;    // Numéro de colonne où commence l'envahiss
 const unsigned KBegMe      = KSizeLine / 2;  // Numéro de colonne où commence le joueur
 
 /*!
+ * \typedef CVString
  * \brief Alias le type de l'écran (l'espace, la matrice).
  */
 typedef vector<string> CVString;    // c'est le type de l'écran (l'espace, la matrice)
