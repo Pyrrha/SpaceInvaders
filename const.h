@@ -12,18 +12,9 @@
 
 #pragma once
 
-using namespace std;
-
-#ifndef SPACE_INVADERS_CONST_H
-#define SPACE_INVADERS_CONST_H
-
-#endif //SPACE_INVADERS_CONST_H
-
-//
-// Created by Pyrrha on 15/01/2016.
-//
-
-#pragma once
+#include <string>
+#include <vector>
+#include <chrono> //AVEC CTIME, pour un chrono pour le rechargement des bullets
 
 using namespace std;
 

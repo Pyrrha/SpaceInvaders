@@ -1117,7 +1117,7 @@ void SpaceInvaders ()
     Konami.resize(10);
 
 
-    unsigned Level = 1;
+    unsigned Level = 50;
     unsigned Ratio;
     unsigned Who;
     DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
@@ -1236,6 +1236,17 @@ void SpaceInvaders ()
     ClearScreen();
     cout << Couleur(KReset);
     DisplayScore(Win, Lost, NbLives, Bullet, Score, MultScore);
+}
+
+
+vector <string> FileToVecStr (string Chemin_du_fichier)
+{
+    string str;
+    vector <string> vec;
+    ifstream input ("../main.cpp");
+    for (getline(input, str); !input.eof(); getline(input, str))
+        vec.push_back(str);
+    return vec;
 }
 
 

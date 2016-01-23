@@ -1,0 +1,8 @@
+#!/bin/sh
+
+g++ -c *.cpp *.h -std=c++11 -ISFML-2.3.2/include
+export LD_LIBRARY_PATH=SFML-2.3.2/lib
+g++ *.o -o sfml-app -LSFML-2.3.2/lib -lsfml-audio -lsfml-system
+
+#Lancement
+./sfml-app

@@ -35,14 +35,14 @@ void ChargeLesSons()
     /*!
      * \brief Chargement des sons en mémoire
      */
-    BufferSound_Tir.loadFromFile("../sounds/laser_shoot.wav");
-    BufferSound_Reload.loadFromFile("../sounds/laser_reload.wav");
-    BufferSound_GameOver.loadFromFile("../sounds/game_over.wav");
-    BufferSound_Degat.loadFromFile("../sounds/degat.wav");
-    BufferSound_Drums.loadFromFile("../sounds/sound_drums.wav");
-    BufferSound_Begin.loadFromFile("../sounds/begin.wav");
-    BufferSound_Start.loadFromFile("../sounds/start.wav");
-    BufferSound_Fight.loadFromFile("../sounds/fight.wav");
+    BufferSound_Tir.loadFromFile("sounds/laser_shoot.wav");
+    BufferSound_Reload.loadFromFile("sounds/laser_reload.wav");
+    BufferSound_GameOver.loadFromFile("sounds/game_over.wav");
+    BufferSound_Degat.loadFromFile("sounds/degat.wav");
+    BufferSound_Drums.loadFromFile("sounds/sound_drums.wav");
+    BufferSound_Begin.loadFromFile("sounds/begin.wav");
+    BufferSound_Start.loadFromFile("sounds/start.wav");
+    BufferSound_Fight.loadFromFile("sounds/fight.wav");
 
     /*!
      * \brief Création des objets sons activables
