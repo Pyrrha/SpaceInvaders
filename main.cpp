@@ -36,6 +36,10 @@
 
 
 //Fonction qui renvoie une string qui est égale à la couleur assosié
+/*!
+ * \fn Couleur
+ * \brief fonction qui premet de changer les couleur du terminal.
+ */
 string Couleur (const string & coul)
 {
 #ifdef DEBUG
@@ -46,6 +50,10 @@ string Couleur (const string & coul)
 }
 
 //Je dois expliquer ?
+/*!
+ * \fn ClearScreen
+ * \brief Procédure pour néttoyer le terminal.
+ */
 void ClearScreen ()
 {
 #ifdef DEBUG
@@ -58,6 +66,10 @@ void ClearScreen ()
 #endif
 }
 
+/*!
+ * \fn IsPowerUps
+ * \brief Fonction pour savoir si on monte en niveau ou pas ;p
+ */
 bool IsPowerUps(char Case)
 {
     for(unsigned i(0); i < PowerUps.size(); ++i)
@@ -66,6 +78,10 @@ bool IsPowerUps(char Case)
 }
 
 //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
+/*!
+ * \fn DisplaySpace
+ * brief Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
+ */
 void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                    unsigned End, unsigned Beg, ms TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
                    const unsigned & BossLife,const unsigned & UltraBossLife, const unsigned & Level, const float & Score, const float & MultScore, vector <pair<unsigned, unsigned>> Shield,
@@ -220,6 +236,10 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
 
 }
 
+/*!
+ * \fn InitUltraBossSpace
+ * \brief Procédure qui Initialise l'Ultra Boss et ses mouvement
+ */
 void InitUltraBossSpace(CVString & Space, unsigned Line, unsigned Column)
 {
     Space.resize(0);
@@ -243,6 +263,10 @@ void InitUltraBossSpace(CVString & Space, unsigned Line, unsigned Column)
 
 
 //Fonction pour initié la grille en mode "Boss"
+/*!
+ * \fn InitBossSpace
+ * \brief Procédure qui initialise le Boss et ses mouvement
+ */
 void InitBossSpace(CVString & Space, unsigned Line, unsigned Column)
 {
 
@@ -267,6 +291,10 @@ void InitBossSpace(CVString & Space, unsigned Line, unsigned Column)
 }
 
 //Fonction pour inité la grille en mode standard
+/*!
+ * \fn InitSpace
+ * \brief Procédure pour inité la grille en mode standard
+ */
 void InitSpace (CVString & Space, unsigned Line, unsigned Column)
 {
     Space.resize(0);
@@ -287,11 +315,21 @@ void InitSpace (CVString & Space, unsigned Line, unsigned Column)
     Space[Space.size()-3][((Column-1)/2)/2] = KInsideShield;
     Space[Space.size()-3][Column -1] = KInsideShield;
 }
-
+/*!
+ * \brief profil de la procédure Remove
+ */
 void Remove (CVString & Space, unsigned Line, unsigned Column);
+
+/*!
+ * \brief profile de la procédure WhoExist
+ */
 bool WhoExist(CVString Space, unsigned Line, char Who);
 
 //Fonction pour descendre les ennemie quand ils arrivent en bout de ligne
+/*!
+ * \fn DownShift
+ * \brief Procédure pour descendre les ennemie quand ils arrivent en bout de ligne
+ */
 void DownShift(CVString & Space, unsigned CurrentLine, bool & Lost, bool & Win)
 {
     if (CurrentLine < Space.size() - 2)
@@ -314,6 +352,11 @@ void DownShift(CVString & Space, unsigned CurrentLine, bool & Lost, bool & Win)
 }
 
 //Fonction du tire "Normal" des énnemies
+
+/*!
+ * \fn Shoot
+ * \brief Procédure du tire "Normal" des énnemies
+ */
 void Shoot (CVString & Space, unsigned Line, unsigned Middle, char Projectile, char Who)
 {
 
@@ -325,6 +368,10 @@ void Shoot (CVString & Space, unsigned Line, unsigned Middle, char Projectile, c
 
 
 //Fonction qui vérifie l'existance de Who sur la ligne
+/*!
+ * \fn WhoExist
+ * \brief Procédure qui vérifie l'existance de Who sur la ligne
+ */
 bool WhoExist(CVString Space, unsigned Line, char Who)
 {
     bool Exist = false;
@@ -338,6 +385,9 @@ bool WhoExist(CVString Space, unsigned Line, char Who)
 }
 
 //Fonction qui supprime la case et les cases latérales
+/*!
+ * 
+ */
 void Remove (CVString & Space, unsigned Line, unsigned Column)
 {
     Space[Line][Column] = KEmpty;
@@ -348,6 +398,9 @@ void Remove (CVString & Space, unsigned Line, unsigned Column)
 }
 
 //Fonction qui detect le debut et la fin des ennemies
+/*!
+ * 
+ */
 void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned & Beg, unsigned & End)
 {
     bool FirstFind = false;
@@ -368,7 +421,9 @@ void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned
 
 
 
-
+/*!
+ * 
+ */
 void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultScore, unsigned LivesMax, unsigned & Jeton)
 {
     if (PowerUp == 'L') ++NbLives;
@@ -380,6 +435,9 @@ void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultSc
 }
 
 //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
+/*!
+ * 
+ */
 void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore,
                      vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton, char & LastPowerUp)
 {
@@ -514,6 +572,9 @@ void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLiv
 }
 
 //Version 2 du tire, le tire spécial du boss
+/*!
+ * 
+ */
 void Shoot3(CVString & Space,unsigned ColumnA, unsigned ColumnB)
 {
 
@@ -529,6 +590,9 @@ void Shoot3(CVString & Space,unsigned ColumnA, unsigned ColumnB)
 }
 
 //Version 2 du tire, le tire spécial du boss
+/*!
+ * 
+ */
 void Shoot2(CVString & Space,unsigned Line, unsigned Column)
 {
 
@@ -544,6 +608,9 @@ void Shoot2(CVString & Space,unsigned Line, unsigned Column)
 
 
 //Manage Generique !!!
+/*!
+ * 
+ */
 void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,
                      bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot,
                      pair <unsigned, unsigned> & PosUltraShoot, unsigned HowMany, const unsigned & Level)
@@ -640,6 +707,9 @@ void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsi
 }
 
 //Fonction Konami qui test si le Konami code a été rentré !
+/*!
+ * 
+ */
 void Konami(vector <char> & Konami, char c, bool & IsKonami)
 {
     if(c != '\0')
@@ -652,6 +722,9 @@ void Konami(vector <char> & Konami, char c, bool & IsKonami)
 }
 
 //Fonction qui gére le joueur
+/*!
+ * 
+ */
 void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char> & KonamiTab, bool & IsKonami, unsigned Time)
 {
     // Lit la structure "termios" de l'entrée standard
@@ -669,7 +742,7 @@ void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char
     tios.c_cc[VTIME] = Time;
     tios.c_cc[VMIN] = 0;
     tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
+    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL 
 
     char c;
     bool Action = false;
@@ -725,6 +798,9 @@ char Read ();
 void BonusChoise();
 
 //Menuaprès avoir fini !
+/*!
+ * 
+ */
 void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsigned & Bullet, float & Score, float & MultScore)
 {
     char ChoixMenu;
@@ -776,6 +852,9 @@ void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsig
 
 }
 
+/*!
+ * 
+ */
 void MajKeybind ()
 {
     char key;
@@ -807,6 +886,9 @@ void MajKeybind ()
 
 }    //Menu général
 
+/*!
+ * 
+ */
 string Espaces (unsigned NbEspace = 13)
 {
     string Espaces;
@@ -815,6 +897,9 @@ string Espaces (unsigned NbEspace = 13)
     return Espaces;
 }
 
+/*!
+ * 
+ */
 void Separateur (unsigned NbSep = 1)
 {
     for(unsigned i (0); i < NbSep; ++i)
@@ -822,6 +907,9 @@ void Separateur (unsigned NbSep = 1)
 
 }
 
+/*!
+ * 
+ */
 void OptionsMenu (vector<string> Option)
 {
     for(unsigned i (0); i < Option.size(); ++i)
@@ -831,6 +919,9 @@ void OptionsMenu (vector<string> Option)
     }
 }
 
+/*!
+ * 
+ */
 void MenuHeader ()
 {
     cout << " ____                          ___                     _             " << endl;
@@ -841,6 +932,9 @@ void MenuHeader ()
     cout << "      |_|    " << endl;
 }
 
+/*!
+ * 
+ */
 void DisplayMenu ()
 {
     vector<string> Options = {" p : Play", " c : Commands", " h : Help", " m : Credit", " e : Exit"};
@@ -863,6 +957,9 @@ void DisplayMenu ()
     cout << "╝" << endl;
 }
 
+/*!
+ * 
+ */
 char Read ()
 {
     char Var;
@@ -879,7 +976,7 @@ char Read ()
     tios.c_cc[VTIME] = 0;
     tios.c_cc[VMIN] = 1;
     tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL */
+    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL 
 
     read(STDIN_FILENO, &Var, 1); // Lit un caractére sur l'entrée standard
 
@@ -888,6 +985,9 @@ char Read ()
     return Var;
 }
 
+/*!
+ * 
+ */
 void Menu ()
 {
     char ChoixMenu;
@@ -971,6 +1071,9 @@ void Menu ()
 }
 
 inline
+/*!
+ * 
+ */
 void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 {
     Shield.resize(0);
@@ -983,6 +1086,9 @@ void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 
 }
 
+/*!
+ * 
+ */
 void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 {
 
@@ -1017,6 +1123,9 @@ void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 
 }
 
+/*!
+ * 
+ */
 void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 {
     ClearScreen();
@@ -1064,6 +1173,11 @@ void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 
 
 }
+
+/*!
+ * \fn SpaceInvaders
+ * \brief Procédure 
+ */
 void SpaceInvaders ()
 {
 
@@ -1238,7 +1352,9 @@ void SpaceInvaders ()
     DisplayScore(Win, Lost, NbLives, Bullet, Score, MultScore);
 }
 
-
+/*!
+ * 
+ */
 vector <string> FileToVecStr (string Chemin_du_fichier)
 {
     string str;
@@ -1250,7 +1366,9 @@ vector <string> FileToVecStr (string Chemin_du_fichier)
 }
 
 
-
+/*!
+ * \brief Le coprs de notre programme
+ */
 int main ()
 {
 #ifdef SOUND
