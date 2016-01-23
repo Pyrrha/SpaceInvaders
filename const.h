@@ -24,6 +24,10 @@ using namespace std;
 #endif //SPACE_INVADERS_CONST_H
 
 //Const PowerUps
+
+/*!
+ * \brief Alias pour la monter de niveau.
+ */
 const vector <char> PowerUps = {'L', 'L', 'L', 'L', 'S', 'S', 'S', 'S', 'S', 'E', 'E', 'E', 'F', 'J'};
 
 
@@ -106,7 +110,15 @@ char KLeft;  // Déplacement vers la gauche
  * \brief Alias pour les torplille.
  */
 char KShoot;  // Lancé de torpille
+
+/*!
+ * \brief Alias ....
+ */
 const unsigned KUp = 273;
+
+/*!
+ * \brief Alias .......
+ */
 const unsigned KDown = 274;
 
 //  Constantes liées à l'envahisseur
