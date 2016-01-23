@@ -1,3 +1,15 @@
+/*!
+ * \file main.cpp
+ *
+ * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
+ *
+ * \date 18/01/2016
+ *
+ * \version 3.2.6
+ *
+ * \brief c'est le fichier qui regroupe tout ce qui touche au son qui seront présent dans notre pojets.
+ */
+
 //
 // Created by Tristan Dietz on 18/01/2016.
 //
@@ -5,6 +17,11 @@
 #include <SFML/Audio.hpp>
 #include <vector>
 
+
+/*!
+ * \typedef std::vector <sf::Sound> SoundList
+ * \brief Alias pour lister nos son.
+ */
 typedef std::vector <sf::Sound> SoundList; //SoundList
 
 sf::SoundBuffer BufferSound_Tir,
@@ -28,6 +45,11 @@ sf::Sound Sound_Tir,
 
 SoundList BeginLevelSound;
 
+
+/*!
+ * \fn ChargeLesSons
+ * \brief Porcédure pour changer le son
+ */
 void ChargeLesSons()
 {
     srand(time(0));
@@ -67,6 +89,11 @@ void ChargeLesSons()
     };
 }
 
+
+/*!
+ * \fn JoueLeSon
+ * \brief Fonction qui permet de changer le son du jeu.
+ */
 void JoueLeSon(unsigned Son = 0)
 {
     switch (Son)
