@@ -1118,7 +1118,8 @@ void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 }
 
 /*!
- *
+ * \fn RouletteGame
+ * \brief Procédure .......
  */
 void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 {
@@ -1155,7 +1156,8 @@ void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 }
 
 /*!
- *
+ * \fn BonusChoise
+ * \brief Procéduree pour le choix du bonus
  */
 void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 {
@@ -1384,7 +1386,7 @@ void SpaceInvaders ()
 }
 
 /*!
- *
+ * \brief fonction qui n'ai pas utiliser
  */
 vector <string> FileToVecStr (string Chemin_du_fichier)
 {
