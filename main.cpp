@@ -68,7 +68,7 @@ void ClearScreen ()
 
 /*!
  * \fn IsPowerUps
- * \brief Fonction pour savoir si on monte en niveau ou pas ;p
+ * \brief Fonction pour savoir si le caractère est un power up ou pas
  */
 bool IsPowerUps(char Case)
 {
@@ -238,7 +238,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
 
 /*!
  * \fn InitUltraBossSpace
- * \brief Procédure qui Initialise l'Ultra Boss et ses mouvement
+ * \brief Procédure qui Initialise la matrice l'Ultra Boss
  */
 void InitUltraBossSpace(CVString & Space, unsigned Line, unsigned Column)
 {
@@ -386,7 +386,8 @@ bool WhoExist(CVString Space, unsigned Line, char Who)
 
 //Fonction qui supprime la case et les cases latérales
 /*!
- * 
+ * \fn Remove
+ * \brief Procédure qui supprime la case et les cases latérales
  */
 void Remove (CVString & Space, unsigned Line, unsigned Column)
 {
@@ -399,7 +400,8 @@ void Remove (CVString & Space, unsigned Line, unsigned Column)
 
 //Fonction qui detect le debut et la fin des ennemies
 /*!
- * 
+ * \fn DetectBegEnd
+ * \brief Procédure qui detect le debut et la fin des ennemies
  */
 void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned & Beg, unsigned & End)
 {
@@ -422,7 +424,8 @@ void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned
 
 
 /*!
- * 
+ * \fn AddPowerUps
+ * \brief Procédure qui premet de faire une monter de niveau
  */
 void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultScore, unsigned LivesMax, unsigned & Jeton)
 {
@@ -436,7 +439,8 @@ void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultSc
 
 //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
 /*!
- * 
+ * \fn RecomputeSpace
+ * \brief Procédure qui recalcule la grille en bougeant les missile (allié et ennemie)
  */
 void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore,
                      vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton, char & LastPowerUp)
@@ -573,7 +577,8 @@ void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLiv
 
 //Version 2 du tire, le tire spécial du boss
 /*!
- * 
+ * \fn Shoot3
+ * \brief Procédure pour la version 2 du tire, le tire spécial du boss
  */
 void Shoot3(CVString & Space,unsigned ColumnA, unsigned ColumnB)
 {
@@ -591,7 +596,8 @@ void Shoot3(CVString & Space,unsigned ColumnA, unsigned ColumnB)
 
 //Version 2 du tire, le tire spécial du boss
 /*!
- * 
+ * \fn Shoot2
+ * \brief Procédure pour la version 2 du tire, le tire spécial du boss
  */
 void Shoot2(CVString & Space,unsigned Line, unsigned Column)
 {
@@ -609,7 +615,8 @@ void Shoot2(CVString & Space,unsigned Line, unsigned Column)
 
 //Manage Generique !!!
 /*!
- * 
+ * \fn ManageInvaders
+ * \brief Procédure du Manage Generique !!!
  */
 void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsigned & Beg, bool & Win, bool & Lost, CVString & Space, unsigned & End,
                      bool & IncomingBossAttack, bool & BossShoot, unsigned & CptShoot, pair <unsigned, unsigned> & PosShoot,
@@ -708,7 +715,8 @@ void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsi
 
 //Fonction Konami qui test si le Konami code a été rentré !
 /*!
- * 
+ * \fn Konami
+ * \brief Procédure qui test si le Konami code a été rentré !
  */
 void Konami(vector <char> & Konami, char c, bool & IsKonami)
 {
@@ -723,7 +731,8 @@ void Konami(vector <char> & Konami, char c, bool & IsKonami)
 
 //Fonction qui gére le joueur
 /*!
- * 
+ *\fn ManageMe
+ * \brief Procedure qui gére le joueur
  */
 void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char> & KonamiTab, bool & IsKonami, unsigned Time)
 {
@@ -742,7 +751,7 @@ void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char
     tios.c_cc[VTIME] = Time;
     tios.c_cc[VMIN] = 0;
     tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL 
+    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL
 
     char c;
     bool Action = false;
@@ -792,14 +801,27 @@ void ManageMe (CVString & Space, unsigned & Pos, unsigned & Bullet, vector <char
     if(Quit) exit(0);
     Konami(KonamiTab, c, IsKonami);
 }
+/*!
+ * \brief profile de la procedure du menu
+ */
 void Menu ();
+/*!
+ * \brief profile de la procedure du SpaceInvaders
+ */
 void SpaceInvaders ();
+/*!
+ * \brief profile de la fonction Read
+ */
 char Read ();
+/*!
+ * \brief profile de la procedure BonusChoise
+ */
 void BonusChoise();
 
-//Menuaprès avoir fini !
+//Menu après avoir fini !
 /*!
- * 
+ * \fn DisplayScore
+ * \brief Procédure du Menu après avoir fini ou il y a le score !
  */
 void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsigned & Bullet, float & Score, float & MultScore)
 {
@@ -853,7 +875,8 @@ void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsig
 }
 
 /*!
- * 
+ * \fn MajKeybind
+ * \brief Procedure qui défini les touche de controle pour le joueur
  */
 void MajKeybind ()
 {
@@ -887,7 +910,8 @@ void MajKeybind ()
 }    //Menu général
 
 /*!
- * 
+ * \fn Espaces
+ * \brief Fonction qui gére les espaces
  */
 string Espaces (unsigned NbEspace = 13)
 {
@@ -898,7 +922,8 @@ string Espaces (unsigned NbEspace = 13)
 }
 
 /*!
- * 
+ *\fn Separateur
+ * \brief Procédure qui gére les separateur
  */
 void Separateur (unsigned NbSep = 1)
 {
@@ -908,7 +933,8 @@ void Separateur (unsigned NbSep = 1)
 }
 
 /*!
- * 
+ * \fn OptionsMenu
+ * \brief Procédure qui affiche les option du menu
  */
 void OptionsMenu (vector<string> Option)
 {
@@ -920,7 +946,8 @@ void OptionsMenu (vector<string> Option)
 }
 
 /*!
- * 
+ *\fn MenuHeader
+ * \brief Procédure qui affiche l'entête du menu
  */
 void MenuHeader ()
 {
@@ -933,7 +960,8 @@ void MenuHeader ()
 }
 
 /*!
- * 
+ *\fn DisplayMenu
+ * \brief Procédure que premet d'afficher le menu
  */
 void DisplayMenu ()
 {
@@ -958,7 +986,8 @@ void DisplayMenu ()
 }
 
 /*!
- * 
+ *\fn Read
+ * \brief Procedure que perment la lecture.......
  */
 char Read ()
 {
@@ -976,7 +1005,7 @@ char Read ()
     tios.c_cc[VTIME] = 0;
     tios.c_cc[VMIN] = 1;
     tcsetattr(STDIN_FILENO, TCSANOW, &tios);
-    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL 
+    // FIN DE LA MODIFICATION DU FONCTIONNEMENT PAR DEFAUT DU TERMINAL
 
     read(STDIN_FILENO, &Var, 1); // Lit un caractére sur l'entrée standard
 
@@ -986,7 +1015,8 @@ char Read ()
 }
 
 /*!
- * 
+ *\fn Menu
+ * \brief Procédure du menu du jeu
  */
 void Menu ()
 {
@@ -1072,7 +1102,8 @@ void Menu ()
 
 inline
 /*!
- * 
+ * \fn InitShield
+ * \brief Procéduere qui inisialise les bouclier
  */
 void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 {
@@ -1087,7 +1118,7 @@ void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 }
 
 /*!
- * 
+ *
  */
 void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 {
@@ -1124,7 +1155,7 @@ void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 }
 
 /*!
- * 
+ *
  */
 void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 {
@@ -1176,7 +1207,7 @@ void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 
 /*!
  * \fn SpaceInvaders
- * \brief Procédure 
+ * \brief Procédure
  */
 void SpaceInvaders ()
 {
@@ -1353,7 +1384,7 @@ void SpaceInvaders ()
 }
 
 /*!
- * 
+ *
  */
 vector <string> FileToVecStr (string Chemin_du_fichier)
 {
