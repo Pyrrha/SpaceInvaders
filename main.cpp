@@ -105,9 +105,9 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
     }
     else
     {*/
-        if(NbLives >= (LifesMax/2)+1) ColBord = KGreen;
-        else if(NbLives > 1) ColBord = KYellow;
-        else ColBord = KRed;
+    if(NbLives >= (LifesMax/2)+1) ColBord = KGreen;
+    else if(NbLives > 1) ColBord = KYellow;
+    else ColBord = KRed;
     //}
 
 
@@ -195,30 +195,30 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
             }
             else
             {*/
-                if (Space[i][j] == KInsideMe) cout << Couleur(KMyColor) << setw(2) << KInsideMe;
-                else if (Space[i][j] == KInsideInvader) cout << Couleur(KInvadersColor) << setw(2) << KInsideInvader;
-                else if (Space[i][j] == KInsideBoss) cout << Couleur(KBossColor) << setw(2) << KInsideBoss;
-                else if (Space[i][j] == KInsideUltraBoss) cout << Couleur(KUltraBossColor) << setw(2) << KInsideUltraBoss;
-                else if (Space[i][j] == KMissile) cout << Couleur(KInvadersColor) << setw(2) << KMissile;
-                else if (Space[i][j] == KTorpedo) cout << Couleur(KMyColor) << setw(2) << KTorpedo;
-                else if (Space[i][j] == KBossWeapon) cout << Couleur(KBossColor) << setw(2) << KBossWeapon;
-                else if (Space[i][j] == KUltraBossWeapon) cout << Couleur(KUltraBossColor) << setw(2) << KUltraBossWeapon;
-                else if (Space[i][j] == KUltraBossSpecialWeapon) cout << Couleur(KUltraBossSpecialColor) << setw(2) << KUltraBossSpecialWeapon;
-                else if (Space[i][j] == KBossSpecialWeapon) cout << Couleur(KBossSpecialColor) << setw(2) << KBossSpecialWeapon;
-                else if (IsPowerUps(Space[i][j])) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KInsideShield)
-                {
-                    for (unsigned z(0); z < Shield.size(); ++z)
-                        if (Shield[z].first == j)
-                        {
-                            if (Shield[z].second == 3) cout << Couleur(KBackgroundGreen) << setw(2) << KEmpty;
-                            else if (Shield[z].second == 2) cout << Couleur(KBackgroundYellow) << setw(2)<< KEmpty;
-                            else if (Shield[z].second == 1) cout << Couleur(KBackgroundRed) << setw(2)<< KEmpty;
-                            else cout << Couleur(KReset) << setw(2) << KEmpty;
-                            break;
-                        }
-                }
-                else cout << Couleur(KReset) << setw(2) << KEmpty;
+            if (Space[i][j] == KInsideMe) cout << Couleur(KMyColor) << setw(2) << KInsideMe;
+            else if (Space[i][j] == KInsideInvader) cout << Couleur(KInvadersColor) << setw(2) << KInsideInvader;
+            else if (Space[i][j] == KInsideBoss) cout << Couleur(KBossColor) << setw(2) << KInsideBoss;
+            else if (Space[i][j] == KInsideUltraBoss) cout << Couleur(KUltraBossColor) << setw(2) << KInsideUltraBoss;
+            else if (Space[i][j] == KMissile) cout << Couleur(KInvadersColor) << setw(2) << KMissile;
+            else if (Space[i][j] == KTorpedo) cout << Couleur(KMyColor) << setw(2) << KTorpedo;
+            else if (Space[i][j] == KBossWeapon) cout << Couleur(KBossColor) << setw(2) << KBossWeapon;
+            else if (Space[i][j] == KUltraBossWeapon) cout << Couleur(KUltraBossColor) << setw(2) << KUltraBossWeapon;
+            else if (Space[i][j] == KUltraBossSpecialWeapon) cout << Couleur(KUltraBossSpecialColor) << setw(2) << KUltraBossSpecialWeapon;
+            else if (Space[i][j] == KBossSpecialWeapon) cout << Couleur(KBossSpecialColor) << setw(2) << KBossSpecialWeapon;
+            else if (IsPowerUps(Space[i][j])) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
+            else if (Space[i][j] == KInsideShield)
+            {
+                for (unsigned z(0); z < Shield.size(); ++z)
+                    if (Shield[z].first == j)
+                    {
+                        if (Shield[z].second == 3) cout << Couleur(KBackgroundGreen) << setw(2) << KEmpty;
+                        else if (Shield[z].second == 2) cout << Couleur(KBackgroundYellow) << setw(2)<< KEmpty;
+                        else if (Shield[z].second == 1) cout << Couleur(KBackgroundRed) << setw(2)<< KEmpty;
+                        else cout << Couleur(KReset) << setw(2) << KEmpty;
+                        break;
+                    }
+            }
+            else cout << Couleur(KReset) << setw(2) << KEmpty;
             //}
 
 
