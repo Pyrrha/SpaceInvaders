@@ -1264,7 +1264,7 @@ void SpaceInvaders ()
     Konami.resize(10);
 
 
-    unsigned Level = 50;
+    unsigned Level = 1;
     unsigned Ratio;
     unsigned Who;
     DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
