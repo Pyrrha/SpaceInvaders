@@ -30,7 +30,11 @@ using namespace std;
  */
 const vector <char> PowerUps = {'L', 'L', 'L', 'L', 'S', 'S', 'S', 'S', 'S', 'E', 'E', 'E', 'F', 'J'};
 
+const unsigned KShieldLives    =  7;
 
+const vector <char> Lots = {'V', 'V', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'V', 'V', 'V', 'B', 'B', 'B', 'B', 'B', 'B', 'A', 'A'};
+
+const vector <unsigned> NbLots = {1,2,0,0,0,0,0,0,0,0,0,1,2,1,3,1,1,2,2,1,3,1,2};
 // Constantes couleurs
 
 /*!
