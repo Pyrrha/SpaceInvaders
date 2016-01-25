@@ -26,14 +26,23 @@ using namespace std;
 //Const PowerUps
 
 /*!
- * \brief Alias pour la monter de niveau.
+ * \brief Alias pour les powersup.
  */
 const vector <char> PowerUps = {'L', 'L', 'L', 'L', 'S', 'S', 'S', 'S', 'S', 'E', 'E', 'E', 'F', 'J'};
 
+/*!
+ * \brief Alias Vie des boucliers.
+ */
 const unsigned KShieldLives    =  7;
 
+/*!
+ * \brief Alias Les lots possible à la lotterie.
+ */
 const vector <char> Lots = {'V', 'V', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'V', 'V', 'V', 'B', 'B', 'B', 'B', 'B', 'B', 'A', 'A'};
 
+/*!
+ * \brief Alias Les valeurs des lots.
+ */
 const vector <unsigned> NbLots = {1,2,0,0,0,0,0,0,0,0,0,1,2,1,3,1,1,2,2,1,3,1,2};
 // Constantes couleurs
 
