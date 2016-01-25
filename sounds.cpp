@@ -31,7 +31,8 @@ sf::SoundBuffer BufferSound_Tir,
         BufferSound_Drums,
         BufferSound_Begin,
         BufferSound_Start,
-        BufferSound_Fight
+        BufferSound_Fight,
+        BufferSound_UltraBoss
 ;
 sf::Sound Sound_Tir,
         Sound_Reload,
@@ -40,7 +41,8 @@ sf::Sound Sound_Tir,
         Sound_Drums,
         Sound_Begin,
         Sound_Start,
-        Sound_Fight
+        Sound_Fight,
+        Sound_UltraBoss
 ;
 
 SoundList BeginLevelSound;
@@ -48,7 +50,7 @@ SoundList BeginLevelSound;
 
 /*!
  * \fn ChargeLesSons
- * \brief Porcédure pour changer le son
+ * \brief Procédure pour charger les sons
  */
 void ChargeLesSons()
 {
@@ -65,6 +67,7 @@ void ChargeLesSons()
     BufferSound_Begin.loadFromFile("sounds/begin.wav");
     BufferSound_Start.loadFromFile("sounds/start.wav");
     BufferSound_Fight.loadFromFile("sounds/fight.wav");
+    BufferSound_UltraBoss.loadFromFile("sounds/victory.wav");
 
     /*!
      * \brief Création des objets sons activables
@@ -77,6 +80,7 @@ void ChargeLesSons()
     Sound_Begin.setBuffer(BufferSound_Begin);
     Sound_Start.setBuffer(BufferSound_Start);
     Sound_Fight.setBuffer(BufferSound_Fight);
+    Sound_UltraBoss.setBuffer(BufferSound_UltraBoss);
 
     /*!
      * \brief Liste des sons de début de niveau
@@ -92,7 +96,8 @@ void ChargeLesSons()
 
 /*!
  * \fn JoueLeSon
- * \brief Fonction qui permet de changer le son du jeu.
+ * \brief Fonction qui permet de changer le son du jeu
+ * \param[in] Son Identifiant permettant de sélectionner le son
  */
 void JoueLeSon(unsigned Son = 0)
 {
@@ -120,5 +125,8 @@ void JoueLeSon(unsigned Son = 0)
         case 6:
             BeginLevelSound[rand() % 3].play();
             break;
+        case 7:
+            Sound_UltraBoss.play();
+
     }
 }
