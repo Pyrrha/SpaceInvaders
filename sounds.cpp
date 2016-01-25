@@ -10,10 +10,6 @@
  * \brief c'est le fichier qui regroupe tout ce qui touche au son qui seront présent dans notre pojets.
  */
 
-//
-// Created by Tristan Dietz on 18/01/2016.
-//
-
 #include <SFML/Audio.hpp>
 #include <vector>
 
@@ -67,7 +63,7 @@ void ChargeLesSons()
     BufferSound_Begin.loadFromFile("sounds/begin.wav");
     BufferSound_Start.loadFromFile("sounds/start.wav");
     BufferSound_Fight.loadFromFile("sounds/fight.wav");
-    BufferSound_UltraBoss.loadFromFile("sounds/victory.wav");
+    BufferSound_UltraBoss.loadFromFile("sounds/carmina.wav");
 
     /*!
      * \brief Création des objets sons activables
