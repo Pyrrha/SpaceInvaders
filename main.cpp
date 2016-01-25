@@ -80,7 +80,7 @@ bool IsPowerUps(char Case)
 //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
 /*!
  * \fn DisplaySpace
- * \brief Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
+ * brief Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
  */
 void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, const unsigned & NbLives, const unsigned & Bullet,const unsigned & Size,
                    unsigned End, unsigned Beg, ms TimeElapsed, bool IsKonami, bool & IncomingAttack, pair <unsigned, unsigned> PosShoot,
@@ -88,7 +88,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                    unsigned LifesMax, unsigned BulletMax, unsigned Jeton, char LastPowerUp)
 {
 
-    //Merci au beau goss de Cedric qui a participé à 15% à la conception du display :)
+    //Merci au beau goss de Cedric qui a participé à 15% à la conception du display -cf : Les contours :)
     ClearScreen();
     string ColBord;
     vector <string> KonamiColor = {KBlue, KCyan, KRed, KGreen, KYellow, KMAgenta};
@@ -105,9 +105,9 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
     }
     else
     {*/
-    if(NbLives >= (LifesMax/2)+1) ColBord = KGreen;
-    else if(NbLives > 1) ColBord = KYellow;
-    else ColBord = KRed;
+        if(NbLives >= (LifesMax/2)+1) ColBord = KGreen;
+        else if(NbLives > 1) ColBord = KYellow;
+        else ColBord = KRed;
     //}
 
 
@@ -178,23 +178,7 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                 cout << Couleur(KCyan) << setw(2) << 'X';
                 continue;
             }
-            /*if(IsKonami)
-            {
-                if (Space[i][j] == KInsideMe) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KInsideInvader) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KInsideBoss) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KInsideBoss) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KMissile) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KTorpedo) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KBossWeapon) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KUltraBossWeapon) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KUltraBossSpecialWeapon) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else if (Space[i][j] == KBossSpecialWeapon) cout << Couleur(KonamiColor[rand()%2]) << setw(2) << KBossSpecialWeapon; //char(rand()%(33-126)+33);
-                else if (Space[i][j] == KInsideShield) cout << Couleur(KonamiColor[rand()%6]) << setw(2) << char(rand()%(33-126)+33);
-                else cout << Couleur(KReset) << setw(2) << KEmpty;
-            }
-            else
-            {*/
+
             if (Space[i][j] == KInsideMe) cout << Couleur(KMyColor) << setw(2) << KInsideMe;
             else if (Space[i][j] == KInsideInvader) cout << Couleur(KInvadersColor) << setw(2) << KInsideInvader;
             else if (Space[i][j] == KInsideBoss) cout << Couleur(KBossColor) << setw(2) << KInsideBoss;
@@ -211,15 +195,15 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
                 for (unsigned z(0); z < Shield.size(); ++z)
                     if (Shield[z].first == j)
                     {
-                        if (Shield[z].second == 3) cout << Couleur(KBackgroundGreen) << setw(2) << KEmpty;
-                        else if (Shield[z].second == 2) cout << Couleur(KBackgroundYellow) << setw(2)<< KEmpty;
-                        else if (Shield[z].second == 1) cout << Couleur(KBackgroundRed) << setw(2)<< KEmpty;
+                        if (Shield[z].second > KShieldLives/2) cout << Couleur(KBackgroundGreen) << setw(2) << Shield[z].second;
+                        else if (Shield[z].second > 1) cout << Couleur(KBackgroundYellow) << setw(2)<< Shield[z].second;
+                        else if (Shield[z].second == 1) cout << Couleur(KBackgroundRed) << setw(2)<< Shield[z].second;
                         else cout << Couleur(KReset) << setw(2) << KEmpty;
                         break;
                     }
             }
             else cout << Couleur(KReset) << setw(2) << KEmpty;
-            //}
+
 
 
         }
@@ -335,15 +319,6 @@ void DownShift(CVString & Space, unsigned CurrentLine, bool & Lost, bool & Win)
     if (CurrentLine < Space.size() - 2)
     {
         swap(Space[CurrentLine], Space[CurrentLine+1]);
-        /*for(unsigned j (0); j < Space.size(); ++j)
-         {
-             if(Space[CurrentLine][j] == KTorpedo) continue;
-             //if(Space[CurrentLine+1][j] != KTorpedo)
-                 swap(Space[CurrentLine][j], Space[CurrentLine+1][j]);
-             else
-                 Remove(Space, CurrentLine, j);
-                 //if (!WhoExist(Space, CurrentLine +1, KInsideInvader)) Win = true;
-         }*/
     }
     else
         Lost = true;
@@ -443,19 +418,21 @@ void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultSc
  * \brief Procédure qui recalcule la grille en bougeant les missile (allié et ennemie)
  */
 void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLives, unsigned & BossLife, unsigned & UltraBossLife, float & Score, float & MultScore,
-                     vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton, char & LastPowerUp)
+                     vector <pair<unsigned, unsigned>> & Shield, unsigned LivesMax, unsigned & Jeton, char & LastPowerUp, const unsigned & HowMany)
 {
 
     //BouclePowerUps
-    for (unsigned j(0); j < Space[0].size(); ++j)
+    if(HowMany%5 == 0)
     {
-        if (IsPowerUps(Space[0][j]) && j > 0) {
-            Space[0][j] = PowerUps[rand() % PowerUps.size() - 1];
-            swap(Space[0][j], Space[0][j - 1]);
+        for (unsigned j(0); j < Space[0].size(); ++j) {
+            if (IsPowerUps(Space[0][j]) && j > 0) {
+                Space[0][j] = PowerUps[rand() % PowerUps.size() - 1];
+                swap(Space[0][j], Space[0][j - 1]);
 
-        }
-        else if (IsPowerUps(Space[0][j]) && j == 0) {
-            Space[0][j] = KEmpty;
+            }
+            else if (IsPowerUps(Space[0][j]) && j == 0) {
+                Space[0][j] = KEmpty;
+            }
         }
     }
     //On parcous de haut en bas pour faire remonté les missile allié
@@ -831,8 +808,7 @@ void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsig
     {
         cout << "win ! :)" << endl;
         cout << endl;
-        Score = Score + (Bullet*100*MultScore) + (NbLives*1000*MultScore);
-        cout << "Score : " << Score << endl;
+
     }
 
     else if (Lost)
@@ -841,15 +817,25 @@ void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsig
 #ifdef SOUND
         JoueLeSon(3);
 #endif
-        Score = Score + (Bullet*100*MultScore) + (NbLives*1000*MultScore);
-        cout << "Score : " << Score << endl;
+
     }
     else
         cerr << "Something went wrong..." << endl;
-
+    Score += (Bullet*100*MultScore) + (NbLives*1000*MultScore);
+    cout << "Score : " << Score << endl;
+    Bullet = 0;
+    NbLives = 0;
     cout << endl;
     cout << endl;
+    string Pseudo;
+    ofstream ScoreFileO("score.me", ios::out | ios::trunc);
 
+    cout << "Entrez votre pseudo : ";
+    getline(cin, Pseudo);
+
+
+    ScoreFileO << Pseudo << " : " << Score << endl;
+    cout << endl;
     cout << "r : Replay" << endl;
     cout << "m : Menu" << endl;
     cout << "e : Exit" << endl;
@@ -965,7 +951,7 @@ void MenuHeader ()
  */
 void DisplayMenu ()
 {
-    vector<string> Options = {" p : Play", " c : Commands", " h : Help", " m : Credit", " e : Exit"};
+    vector<string> Options = {" p : Play", " c : Commands", " h : Help", " m : Credit", " s : Score", " e : Exit"};
 
     //Affiche la structure du mnenu ainsi que le contenu
     cout << Espaces() << "╔";
@@ -987,7 +973,7 @@ void DisplayMenu ()
 
 /*!
  *\fn Read
- * \brief Procedure que perment la lecture
+ * \brief Procedure que perment la lecture.......
  */
 char Read ()
 {
@@ -1012,6 +998,53 @@ char Read ()
     tios.c_lflag = old_c_lflag;
     tcsetattr(STDIN_FILENO, TCSANOW, &tios);
     return Var;
+}
+void MenuScore()
+{
+    ifstream ScoreFileI("score.me", ios::in);
+    string Line;
+    char Wait;
+    while(getline(ScoreFileI, Line))
+    {
+        cout << Line << endl;
+
+    }
+    Wait = Read();
+}
+void MenuHelp()
+{
+    char Wait;
+    ClearScreen();
+    cout << KLeft << " : Move to the left." << endl;
+    cout << KRight << " : Move to the right." << endl;
+    cout << KShoot << " : Shoot." << endl;
+    cout << endl;
+    cout << Couleur(KMyColor) << KInsideMe << " : Joueur." << endl;
+    cout << Couleur(KMyColor) << "- " << KTorpedo << " : Arme." << endl;
+    cout << endl;
+    cout << Couleur(KInvadersColor) << KInsideInvader << " : Invader." << endl;
+    cout << Couleur(KInvadersColor) << "- " << KMissile << " : Arme." << endl;
+    cout << endl;
+    cout << Couleur(KBossColor) << KInsideBoss << " : Boss." << endl;
+    cout << Couleur(KBossColor) << "- " << KBossWeapon << " : Arme." << endl;
+    cout << Couleur(KBossColor) << "- " << KBossSpecialWeapon << " : Arme spécial." << endl;
+    cout << endl;
+    cout << Couleur(KUltraBossColor) << KInsideUltraBoss << " : Ultra Boss." << endl;
+    cout << Couleur(KUltraBossColor) << "- " << KUltraBossWeapon << " : Arme." << endl;
+    cout << Couleur(KUltraBossColor) << "- " << KUltraBossSpecialWeapon << " : Arme spécial. (Il possède également l'arme spécial du boss)" << endl;
+    cout << Couleur(KReset) << endl;
+    cout << "Il y a 50 niveaux. Les niveaux changent de taille et la vitesse des ennemies augmente. Vous avez des boucliers qui ont 7 point de vie chacun." << endl;
+    cout << "Après chaque boss une boutique est porposé : -Soit une vie; -Soit une balle suplémentaire; -Soit utiliser un jeton." << endl;
+    cout << "Il existe des powers ups qui donne divers bonus, c'est aussi le seul moyen d'obtenir des jetons. (Drop très très rare)" << endl;
+    cout << "Vous avez accès à tout les informations nécessaire au dessus du cadre de jeux." << endl;
+    cout << "Les boss ont des points de vie alors que les invaders normaux se détruise un par un." << endl;
+    cout << "Konami est notre ami. Bon jeu ! ";
+    cout << "(Press any case to go back)";
+    cout << endl;
+    Wait = Read ();
+
+
+
 }
 
 /*!
@@ -1062,14 +1095,7 @@ void Menu ()
         }
         case 'h' :
         {
-            ClearScreen();
-            cout << KLeft << " : Move to the left." << endl;
-            cout << KRight << " : Move to the right." << endl;
-            cout << KShoot << " : Shoot." << endl;
-            cout << endl;
-            cout << "(Press any case to go back)";
-            cout << endl;
-            ChoixMenu = Read ();
+            MenuHelp();
             Menu();
             break;
         }
@@ -1092,6 +1118,10 @@ void Menu ()
             break;
         }
 
+        case 's' :
+            MenuScore();
+            Menu();
+            break;
         case 'e' :
             break;
         default :
@@ -1108,25 +1138,24 @@ inline
 void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 {
     Shield.resize(0);
-    Shield.push_back (make_pair(0, 3));
-    Shield.push_back (make_pair((Column-1)/2+((Column-1)/2)/2, 3));
-    Shield.push_back (make_pair((Column-1)/2, 3));
-    Shield.push_back (make_pair(((Column-1)/2)/2, 3));
-    Shield.push_back (make_pair(Column -1, 3));
+    Shield.push_back (make_pair(0, KShieldLives));
+    Shield.push_back (make_pair((Column-1)/2+((Column-1)/2)/2, KShieldLives));
+    Shield.push_back (make_pair((Column-1)/2, KShieldLives));
+    Shield.push_back (make_pair(((Column-1)/2)/2, KShieldLives));
+    Shield.push_back (make_pair(Column -1, KShieldLives));
 
 
 }
 
 /*!
  * \fn RouletteGame
- * \brief Procédure pour le choix du bonus
+ * \brief Procédure .......
  */
 void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 {
 
 
-    const vector <char> Lots = {'V', 'V', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'V', 'V', 'V', 'B', 'B', 'B', 'B', 'B', 'B', 'A', 'A'};
-    const vector <unsigned> NbLots = {1,2,0,0,0,0,0,0,0,0,0,1,2,1,3,1,1,2,2,1,3,1,2};
+
     char Wait;
     unsigned Bonus = rand()%Lots.size()-1;
     ClearScreen();
@@ -1209,7 +1238,7 @@ void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 
 /*!
  * \fn SpaceInvaders
- * \brief Procédure qui est le squelette de notre projet
+ * \brief Procédure
  */
 void SpaceInvaders ()
 {
@@ -1267,7 +1296,6 @@ void SpaceInvaders ()
     unsigned Level = 1;
     unsigned Ratio;
     unsigned Who;
-    DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
 
 
     while(Level < 52)
@@ -1339,6 +1367,7 @@ void SpaceInvaders ()
 #ifdef SOUND
         JoueLeSon(6);
 #endif
+        DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
 
         while(!Win && !Lost)
         {
@@ -1360,9 +1389,8 @@ void SpaceInvaders ()
             if(HowMany%Ratio == 0)
                 ManageInvaders(Who, Increment,CurrentLine,Beg,Win,Lost,Space,End,IncomingBossAttack,BossShoot,CptShoot,PosShoot,PosUltraShoot, HowMany, Level);
             DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsedMS, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level, Score, MultScore, Shield, LivesMax, BulletMax, Jeton, LastPowerUp);
-            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield, LivesMax, Jeton, LastPowerUp);
+            RecomputeSpace(Space, Win, Lost, NbLives, BossLife, UltraBossLife, Score, MultScore, Shield, LivesMax, Jeton, LastPowerUp, HowMany);
             DetectBegEnd(Space, CurrentLine, Beg, End);
-            //DisplaySpace(Space, Win, Lost, NbLives, Bullet, KSizeSpace, End, Beg, TimeElapsed, IsKonami, IncomingBossAttack, PosShoot, BossLife, UltraBossLife, Level);
             auto Time2 = Time::now();
             if (Bullet < KMyBullet) TimeElapsed += Time2 - Time1;
             TimeElapsedMS += chrono::duration_cast<ms>(TimeElapsed);
@@ -1421,4 +1449,3 @@ int main ()
 #ifdef SOUND
 #undef SOUND
 #endif
-
