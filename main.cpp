@@ -3,11 +3,10 @@
  *
  * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
  *
- * \date 18/01/2016
+ * \date 18/12/2015
  *
- * \version 3.2.6
+ * \version 1.1.112
  *
- * \brief c'est le corps de notre pojets quuii n'est d'autre qu'un space invader
  */
 
 /*!
@@ -37,9 +36,6 @@
 
 //Fonction qui renvoie une string qui est égale à la couleur assosié
 /*!
- * \fn Couleur
- *
- *
  * \brief Donner une couleur
  *
  *	Permet de donner une couleur au terminal
@@ -57,9 +53,6 @@ string Couleur (const string & coul)
 
 //Je dois expliquer ?
 /*!
- * \fn ClearScreen
- *
- *
  * \brief Procédure pour néttoyer le terminal.
  *
  *
@@ -77,7 +70,6 @@ void ClearScreen ()
 }
 
 /*!
- * \fn IsPowerUps
  * \brief Fonction pour savoir si le caractère est un power up ou pas
  * \param[in] Case : Le caractère de la case
  */
@@ -90,7 +82,6 @@ bool IsPowerUps(const char & Case)
 
 //Le display qui s'adapte à la taille de la grille et affiche divers élements (vie/minition) --> Bouclier, KMeSpecialWeapon, KUltraBossSpecialWeapon ??
 /*!
- * \fn DisplaySpace
  * \brief Display du jeu
  * \param[in] Space : La matrice du jeu
  * \param[in] Win : Booleen qui vaut vrai si la partie est gagné (Visible en mode debug)
@@ -255,8 +246,8 @@ void DisplaySpace (const CVString & Space, const bool & Win, const bool & Lost, 
 }
 
 /*!
- * \fn InitUltraBossSpace
  * \brief Procédure qui Initialise la matrice l'Ultra Boss
+ *
  * \param[in|out] Space : Matrice du jeu
  * \param[in] Line : Nombre de ligne
  * \param[in] Column : Nombre de colonne  
@@ -285,7 +276,6 @@ void InitUltraBossSpace(CVString & Space, unsigned Line, unsigned Column)
 
 //Fonction pour initié la grille en mode "Boss"
 /*!
- * \fn InitBossSpace
  * \brief Procédure qui initialise le Boss
  * \param[in|out] Space : Matrice du jeu
  * \param[in] Line : Nombre de ligne
@@ -316,7 +306,6 @@ void InitBossSpace(CVString & Space, unsigned Line, unsigned Column)
 
 //Fonction pour inité la grille en mode standard
 /*!
- * \fn InitSpace
  * \brief Procédure pour inité la grille en mode standard
  * \param[in|out] Space : Matrice du jeu
  * \param[in] Line : Nombre de ligne
@@ -354,7 +343,6 @@ bool WhoExist(CVString Space, unsigned Line, char Who);
 
 //Fonction pour descendre les ennemie quand ils arrivent en bout de ligne
 /*!
- * \fn DownShift
  * \brief Procédure pour descendre les ennemie quand ils arrivent en bout de ligne
  * \param[in|out] Space : Matrice du jeu
  * \param[in] CurrentLine : Ligne actuel de l'ennemi
@@ -376,7 +364,6 @@ void DownShift(CVString & Space, unsigned CurrentLine, bool & Lost, bool & Win)
 //Fonction du tire "Normal" des énnemies
 
 /*!
- * \fn Shoot
  * \brief Procédure du tire "Normal" des énnemies
  * \param[in|out] Space : Matrice du jeu
  * \param[in] Line : La ligne sur laquel tiré
@@ -396,7 +383,6 @@ void Shoot (CVString & Space, unsigned Line, unsigned Middle, char Projectile, c
 
 //Fonction qui vérifie l'existance de Who sur la ligne
 /*!
- * \fn WhoExist
  * \brief Procédure qui vérifie l'existance de Who sur la ligne
  * \param[in] Space : Matrice du jeu
  * \param[in] Line : Ligne pour vérifié
@@ -416,7 +402,6 @@ bool WhoExist(CVString Space, unsigned Line, char Who)
 
 //Fonction qui supprime la case et les cases latérales
 /*!
- * \fn Remove
  * \brief Procédure qui supprime la case et les cases latérales
  * \param[in|out] Space : Matrice du jeu
  * \param[in] Line : La ligne
@@ -433,7 +418,6 @@ void Remove (CVString & Space, unsigned Line, unsigned Column)
 
 //Fonction qui detect le debut et la fin des ennemies
 /*!
- * \fn DetectBegEnd
  * \brief Procédure qui detect le debut et la fin des ennemies
  * \param[in] Space : Matrice du jeu
  * \param[in] CurrentLine : Ligne actuel de l'ennemi
@@ -461,7 +445,6 @@ void DetectBegEnd(const CVString & Space, const unsigned & CurrentLine, unsigned
 
 
 /*!
- * \fn AddPowerUps
  * \brief Procédure qui premet d'ajouter les effets du powerup touché
  * \param[in] PowerUp : Le caractère représentant un powerup
  * \param[in|out] NbLives : Nombre de vie restant
@@ -482,7 +465,6 @@ void AddPowerUps(char PowerUp, unsigned & NbLives, float & Score, float & MultSc
 
 //Fonction qui recalcule la grille en bougeant les missile (allié et ennemie)
 /*!
- * \fn RecomputeSpace
  * \brief Procédure qui recalcule la grille en bougeant les missile (allié et ennemie) et regarde aussi pour les powerups
  * \param[in|out] Space : Matrice du jeu
  * \param[out] Win : Booleen qui vaut vrai si le joueur a gagné
@@ -635,7 +617,6 @@ void RecomputeSpace (CVString & Space, bool & Win, bool & Lost, unsigned & NbLiv
 
 //Version 2 du tire, le tire spécial du boss
 /*!
- * \fn Shoot3
  * \brief Procédure pour la version 3 du tire, le tire spécial de l'ultra boss
  * \param[in|out] Space : Matrice du jeu
  * \param[in] ColumnA : La première colonne
@@ -657,7 +638,6 @@ void Shoot3(CVString & Space,unsigned ColumnA, unsigned ColumnB)
 
 //Version 2 du tire, le tire spécial du boss
 /*!
- * \fn Shoot2
  * \brief Procédure pour la version 2 du tire, le tire spécial du boss
  * \param[in|out] Space : Matrice du jeu
  * \param[in] Line : La ligne
@@ -679,7 +659,6 @@ void Shoot2(CVString & Space,unsigned Line, unsigned Column)
 
 //Manage Generique !!!
 /*!
- * \fn ManageInvaders
  * \brief Procédure du Manage des ennemi
  * \param[in] Who : Qui faut il menage (1 : Invader | 2 : Boss | 3 : UltraBoss)
  * \param[in|out] Increment : Direction dans laquel va l'envahisseur (+1 vers la droite, -1 vers la gauche)
@@ -794,7 +773,6 @@ void ManageInvaders (unsigned Who, int & Increment, unsigned & CurrentLine, unsi
 
 //Fonction Konami qui test si le Konami code a été rentré !
 /*!
- * \fn Konami
  * \brief Procédure qui test si le Konami code a été rentré !
  * \param[in|out] Konami : Vecteur de char qui enregistre les 10 dérnier caractère taper
  * \param[in] c : Le dernier caractere tapé
@@ -813,7 +791,6 @@ void Konami(vector <char> & Konami, char c, bool & IsKonami)
 
 //Fonction qui gére le joueur
 /*!
- *\fn ManageMe
  * \brief Procedure qui gére le joueur
  * \param[in|out] Space : Matrice du jeu
  * \param[in|out] Pos : Position du joueur
@@ -908,7 +885,6 @@ void BonusChoise();
 
 //Menu après avoir fini !
 /*!
- * \fn DisplayScore
  * \brief Procédure du Menu après avoir fini ou il y a le score !
  * \param[in] Win : Booleen qui vaut vrai si le joueur a gagné
  * \param[in] Lost : Booleen qui vaut vrai si le joueur a perdu
@@ -978,7 +954,6 @@ void DisplayScore(const bool & Win, const bool & Lost, unsigned & NbLives, unsig
 }
 
 /*!
- * \fn MajKeybind
  * \brief Procedure qui défini les touche de controle pour le joueur
  */
 void MajKeybind ()
@@ -1013,8 +988,8 @@ void MajKeybind ()
 }    //Menu général
 
 /*!
- * \fn Espaces
  * \brief Fonction qui gére les espaces
+ *
  * \param[in] NbEspace : Nombre d'espace voulu
  */
 string Espaces (unsigned NbEspace = 13)
@@ -1026,7 +1001,6 @@ string Espaces (unsigned NbEspace = 13)
 }
 
 /*!
- *\fn Separateur
  * \brief Procédure qui gére les separateur
  * \param[in] NbSep : Nombre de séparateur voulu
  */
@@ -1038,8 +1012,8 @@ void Separateur (unsigned NbSep = 1)
 }
 
 /*!
- * \fn OptionsMenu
  * \brief Procédure qui affiche les option du menu
+ *
  * \param[in] Option : Vecteur contenant les options du menu
  */
 void OptionsMenu (vector<string> Option)
@@ -1052,7 +1026,6 @@ void OptionsMenu (vector<string> Option)
 }
 
 /*!
- *\fn MenuHeader
  * \brief Procédure qui affiche l'entête du menu
  */
 void MenuHeader ()
@@ -1066,7 +1039,6 @@ void MenuHeader ()
 }
 
 /*!
- *\fn DisplayMenu
  * \brief Procédure que premet d'afficher le menu
  */
 void DisplayMenu ()
@@ -1092,7 +1064,6 @@ void DisplayMenu ()
 }
 
 /*!
- *\fn Read
  * \brief Procedure que perment de lire un caractère
  */
 char Read ()
@@ -1119,6 +1090,10 @@ char Read ()
     tcsetattr(STDIN_FILENO, TCSANOW, &tios);
     return Var;
 }
+
+/*!
+ * \brief Procedure que perment de lire un caractère
+ */
 void MenuScore()
 {
     ifstream ScoreFileI("score.me", ios::in);
@@ -1131,6 +1106,10 @@ void MenuScore()
     }
     Wait = Read();
 }
+
+/*!
+ * \brief Procedure que perment de lire un caractère
+ */
 void MenuHelp()
 {
     char Wait;
@@ -1168,7 +1147,6 @@ void MenuHelp()
 }
 
 /*!
- *\fn Menu
  * \brief Procédure du menu du jeu
  */
 void Menu ()
@@ -1250,13 +1228,12 @@ void Menu ()
     }
 }
 
-inline
 /*!
- * \fn InitShield
  * \brief Procéduere qui initialise les bouclier
  * \param[out] Shield : Vecteur contenant les position et vie des boucliers
  * \param[in] Column : Nombre de colonne de la matrice
  */
+inline
 void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 {
     Shield.resize(0);
@@ -1270,7 +1247,6 @@ void InitShield (vector <pair<unsigned, unsigned>> & Shield, unsigned Column)
 }
 
 /*!
- * \fn RouletteGame
  * \brief Procédure qui va générer un bonus aléatoire parmis une liste prédéfini
  * \param[out] LivesMax : Nombre de vie Maximum du joueur
  * \param[out] BulletMax : Nombre de balles maximum du joueur
@@ -1309,7 +1285,6 @@ void RouletteGame(unsigned & LivesMax, unsigned & BulletMax)
 }
 
 /*!
- * \fn BonusChoise
  * \brief Procéduree pour le choix du bonus
  * \param[out] LivesMax : Nombre de vie Maximum du joueur
  * \param[out] BulletMax : Nombre de balles maximum du joueur
@@ -1364,8 +1339,7 @@ void BonusChoise(unsigned & LivesMax,unsigned & BulletMax, unsigned & Jeton)
 }
 
 /*!
- * \fn SpaceInvaders
- * \brief Procédure
+ * \brief Procédure du jeu
  */
 void SpaceInvaders ()
 {

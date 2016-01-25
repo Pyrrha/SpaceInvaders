@@ -1,13 +1,12 @@
 /*!
- * \file main.cpp
+ * \file sounds.h
  *
  * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
  *
  * \date 18/01/2016
  *
- * \version 3.2.6
+ * \version 1.1.112
  *
- * \brief c'est le fichier qui regroupe tout ce qui touche au son qui seront présent dans notre pojets.
  */
 
 //

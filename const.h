@@ -1,13 +1,12 @@
 /*!
- * \file main.cpp
+ * \file const.cpp
  *
  * \author Tristan Dietz, Diogo De Almeida, Romain Colonna, Alexandre Caron
  *
- * \date 18/01/2016
+ * \date 18/12/2015
  *
- * \version 3.2.6
+ * \version 1.1.112
  *
- * \brief c'est le lichier qui contient toutes les constant de notre pojets quui n'est d'autre qu'un space invader
  */
 
 #pragma once
